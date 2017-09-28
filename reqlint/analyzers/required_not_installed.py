@@ -2,6 +2,10 @@ from reqlint.model.advice import Advice
 
 
 class RequiredNotInstalledAnalyzer(object):
+    '''
+    Reports packages that are required but not installed.
+    '''
+
     def __init__(self, requirements_txt, installed_packages):
         self.requirements_txt = requirements_txt
         self.installed_packages = installed_packages

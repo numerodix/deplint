@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     logging.basicConfig(
         level=logging.DEBUG if args.verbose else logging.WARN,
-        format='[%(levelname)s] %(message)s',
+        format='[%(levelname)s] %(name)s %(message)s',
     )
 
     if not all((args.pip_path, args.requirements_txt)):
