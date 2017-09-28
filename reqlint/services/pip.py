@@ -4,7 +4,6 @@ import subprocess
 from reqlint.parsers.pip_freeze import PipFreezeParser
 from reqlint.parsers.pip_search import PipSearchParser
 
-
 _logger = logging.getLogger(__name__)
 
 

@@ -1,5 +1,5 @@
-from reqlint.model.package_installed import InstalledPackage
 from reqlint.model.installed_packages import InstalledPackages
+from reqlint.model.package_installed import InstalledPackage
 
 
 def test_installed_packages_equality():

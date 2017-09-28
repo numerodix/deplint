@@ -1,6 +1,7 @@
 import pytest
 
-from reqlint.analyzers.required_not_installed import RequiredNotInstalledAnalyzer
+from reqlint.analyzers.required_not_installed import \
+    RequiredNotInstalledAnalyzer
 from reqlint.model.advice import Advice
 
 

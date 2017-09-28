@@ -4,7 +4,6 @@ import re
 from reqlint.model.package_requirement import PackageRequirement
 from reqlint.model.requirements_txt import RequirementsTxt
 
-
 _logger = logging.getLogger(__name__)
 
 

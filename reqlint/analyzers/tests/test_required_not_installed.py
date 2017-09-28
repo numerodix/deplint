@@ -1,4 +1,5 @@
-from reqlint.analyzers.required_not_installed import RequiredNotInstalledAnalyzer
+from reqlint.analyzers.required_not_installed import \
+    RequiredNotInstalledAnalyzer
 from reqlint.model.advice import Advice
 from reqlint.model.advice_list import AdviceList
 from reqlint.model.installed_packages import InstalledPackages

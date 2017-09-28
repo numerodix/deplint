@@ -6,7 +6,6 @@ from reqlint.model.installed_packages import InstalledPackages
 from reqlint.model.package_installed import InstalledPackage
 from reqlint.parsers.requirements_txt import RequirementsTxtParser
 
-
 _logger = logging.getLogger(__name__)
 
 
