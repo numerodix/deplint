@@ -1,4 +1,11 @@
+import pytest
+
 from reqlint.model.package_requirement import PackageRequirement
+
+
+def test_package_requirement_ctor():
+    with pytest.raises(ValueError):
+        PackageRequirement(name='simplejson', operator='<<', version='1.1')
 
 
 def test_package_requirement_equality():

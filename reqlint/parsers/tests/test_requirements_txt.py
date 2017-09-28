@@ -12,6 +12,9 @@ parsimonious<=0.5
 pytest==2.3.5
 six>=1.6.0
 tox>1.6.1
+mock!=5.1.1
+ply~=3.10
+jsonpath===2.0.x
 '''
 
 
@@ -23,6 +26,9 @@ def test_requirements_txt_parser():
             PackageRequirement(name='pytest', operator='==', version='2.3.5'),
             PackageRequirement(name='six', operator='>=', version='1.6.0'),
             PackageRequirement(name='tox', operator='>', version='1.6.1'),
+            PackageRequirement(name='mock', operator='!=', version='5.1.1'),
+            PackageRequirement(name='ply', operator='~=', version='3.10'),
+            PackageRequirement(name='jsonpath', operator='===', version='2.0.x'),
         ],
     )
 

@@ -1,0 +1,5 @@
+Dependency version specifiers:
+https://www.python.org/dev/peps/pep-0440/
+
+Dependency markers:
+https://www.python.org/dev/peps/pep-0508/

@@ -15,10 +15,10 @@ class RequirementsTxtParser(object):
     rx_comment = re.compile('#.*$')
 
     # shorter operators last to prevent greedy matching from incorrect parsing
-    version_operators = ('<=', '==', '>=', '<', '>')
+    version_operators = PackageRequirement.VALID_OPERATORS
     version_operators_joined = '|'.join((re.escape(op) for op in version_operators))
     rx_name_op_version = re.compile(
-        '^(?P<name>.*)(?P<operator>' + version_operators_joined + ')(?P<version>.*)$'
+        '^(?P<name>.*?)(?P<operator>' + version_operators_joined + ')(?P<version>.*)$'
     )
 
     def __init__(self, fileobj):
