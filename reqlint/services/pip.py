@@ -1,6 +1,7 @@
 import logging
 import subprocess
 
+from reqlint.model.available_packages import AvailablePackages
 from reqlint.parsers.pip_freeze import PipFreezeParser
 from reqlint.parsers.pip_search import PipSearchParser
 
@@ -51,10 +52,17 @@ class Pip(object):
         pkgs_installed = self.parse_freeze_output(output)
         return pkgs_installed
 
-    def search_for_releases(self, package_name):
+    def search_for_package(self, package_name):
         output = self.invoke_search(package_name)
         pkg_rels = self.parse_search_output(package_name, output)
         return pkg_rels
+
+    def search_for_packages(self, package_names):
+        available = []
+        for package_name in package_names:
+            pkg_rels = self.search_for_package(package_name=package_name)
+            available.append(pkg_rels)
+        return AvailablePackages(packages=available)
 
 
 if __name__ == '__main__':
@@ -63,5 +71,5 @@ if __name__ == '__main__':
     pip = Pip('pip')
     pkgs = pip.list_installed_packages()
     print(pkgs)
-    rels = pip.search_for_releases('six')
+    rels = pip.search_for_packages(('six', 'simplejson'))
     print(rels)

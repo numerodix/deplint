@@ -6,6 +6,7 @@ import logging
 import sys
 
 sys.path.append('.')
+from reqlint.analyzers.can_be_upgraded import CanBeUpgradedAnalyzer
 from reqlint.analyzers.required_installed import RequiredInstalledAnalyzer
 from reqlint.analyzers.required_not_installed import RequiredNotInstalledAnalyzer
 from reqlint.parsers.requirements_txt import RequirementsTxtParser
@@ -16,37 +17,59 @@ _logger = logging.getLogger(__name__)
 
 
 class RequirementsLinter(object):
-    def analyze_installed(self, requirements_txt, installed_packages):
+    def analyze_installed(self, args):
+        # gather all the data we need to analyze
+        parser = RequirementsTxtParser(fileobj=open(args.requirements_txt))
+        requirements_txt = parser.parse()
+
+        pip = Pip(pip_path=args.pip_path)
+        installed_packages = pip.list_installed_packages()
+
+        # run the analyzers
         analyzer = RequiredInstalledAnalyzer(
             requirements_txt=requirements_txt,
             installed_packages=installed_packages,
         )
-        advice_list = analyzer.analyze()
-        return advice_list
+        advice_list1 = analyzer.analyze()
 
-    def analyze_not_installed(self, requirements_txt, installed_packages):
         analyzer = RequiredNotInstalledAnalyzer(
             requirements_txt=requirements_txt,
             installed_packages=installed_packages,
         )
-        advice_list = analyzer.analyze()
-        return advice_list
+        advice_list2 = analyzer.analyze()
 
-    def analyze(self, requirements_txt, pip_path):
+        return [advice_list1, advice_list2]
+
+    def analyze_upgrade(self, args):
         # gather all the data we need to analyze
-        parser = RequirementsTxtParser(fileobj=open(requirements_txt))
+        parser = RequirementsTxtParser(fileobj=open(args.requirements_txt))
         requirements_txt = parser.parse()
 
-        pip = Pip(pip_path=pip_path)
+        pip = Pip(pip_path=args.pip_path)
         installed_packages = pip.list_installed_packages()
 
+        package_names = [pkg.name for pkg in requirements_txt.packages]
+        available_packages = pip.search_for_packages(package_names)
+
         # run the analyzers
-        advice_list1 = self.analyze_installed(requirements_txt, installed_packages)
-        advice_list2 = self.analyze_not_installed(requirements_txt, installed_packages)
-        advice_lists = [
-            advice_list1,
-            advice_list2,
-        ]
+        analyzer = CanBeUpgradedAnalyzer(
+            requirements_txt=requirements_txt,
+            installed_packages=installed_packages,
+            available_packages=available_packages,
+        )
+        advice_list = analyzer.analyze()
+
+        return [advice_list]
+
+    def run(self, args):
+        print('Using pip: %s' % args.pip_path)
+        print('Using requirements.txt: %s' % args.requirements_txt)
+
+        if args.action == 'installed':
+            advice_lists = self.analyze_installed(args)
+
+        elif args.action == 'upgrade':
+            advice_lists = self.analyze_upgrade(args)
 
         advice_all = itertools.chain(
             *(ad_list.advice_list for ad_list in advice_lists)
@@ -62,17 +85,6 @@ class RequirementsLinter(object):
 
         return 0
 
-    def run(self, args):
-        print('Using pip: %s' % args.pip_path)
-        print('Using requirements.txt: %s' % args.requirements_txt)
-
-        exit_code = self.analyze(
-            requirements_txt=args.requirements_txt,
-            pip_path=args.pip_path,
-        )
-
-        return exit_code
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -80,10 +92,15 @@ if __name__ == '__main__':
             'Linter for requirements.txt\n'
             '\n'
             'To see if all requirements are installed:\n'
-            '  reqlint -r requirements.txt --pip /path/to/venv/bin/pip'
+            '  reqlint installed -r requirements.txt --pip /path/to/venv/bin/pip\n'
+            '\n'
+            'To see if any requirements can be upgraded:\n'
+            '  reqlint upgrade -r requirements.txt --pip /path/to/venv/bin/pip'
         ),
         formatter_class=argparse.RawTextHelpFormatter,
     )
+    parser.add_argument('action', choices=('installed', 'upgrade'),
+                        help='Action to take')
     parser.add_argument('--pip', dest='pip_path', metavar='<pip>',
                         help='Path to pip program (typically in a virtualenv)')
     parser.add_argument('-r', '--requirements', dest='requirements_txt',
