@@ -12,7 +12,8 @@ class RequirementsTxtParser(object):
     Parser for the requirements.txt file format.
     '''
 
-    rx_comment = re.compile('#.*$')
+    # comment at the beginning of line after whitespace
+    rx_comment = re.compile('(?:^|\s+)#.*$')
 
     # shorter operators last to prevent greedy matching from incorrect parsing
     version_operators = PackageRequirement.VALID_OPERATORS

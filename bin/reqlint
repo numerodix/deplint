@@ -62,13 +62,24 @@ class RequirementsLinter(object):
 
         return 0
 
+    def run(self, args):
+        print('Using pip: %s' % args.pip_path)
+        print('Using requirements.txt: %s' % args.requirements_txt)
+
+        exit_code = self.analyze(
+            requirements_txt=args.requirements_txt,
+            pip_path=args.pip_path,
+        )
+
+        return exit_code
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=(
             'Linter for requirements.txt\n'
             '\n'
-            'To see if requirements/installed packages are out of sync:\n'
+            'To see if all requirements are installed:\n'
             '  reqlint -r requirements.txt --pip /path/to/venv/bin/pip'
         ),
         formatter_class=argparse.RawTextHelpFormatter,
@@ -92,8 +103,5 @@ if __name__ == '__main__':
         sys.exit(2)
 
     linter = RequirementsLinter()
-    exit_code = linter.analyze(
-        requirements_txt=args.requirements_txt,
-        pip_path=args.pip_path,
-    )
+    exit_code = linter.run(args)
     sys.exit(exit_code)
