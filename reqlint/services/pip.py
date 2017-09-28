@@ -106,7 +106,6 @@ class Pip(object):
 
 if __name__ == '__main__':
     import logging
-    import sys
     logging.basicConfig()
     pip = Pip('pip')
     rels = pip.search_for_releases('six')

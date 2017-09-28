@@ -15,10 +15,10 @@ _logger = logging.getLogger(__name__)
 class RequirementsLinter(object):
     def analyze(self, requirements_txt, pip_path):
         parser = RequirementsTxtParser(fileobj=open(requirements_txt))
-        reqs = parser.parse()
+        pkgs_required = parser.parse()
 
         pip = Pip(pip_path=pip_path)
-        for pkg in reqs.packages:
+        for pkg in pkgs_required.packages:
             _logger.debug('Searching for package releases: %s', pkg.name)
             pkg_rels = pip.search_for_releases(package_name=pkg.name)
             print('Releases for %s: %s' % (

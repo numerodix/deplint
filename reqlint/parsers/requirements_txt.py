@@ -36,7 +36,7 @@ class RequirementsTxtParser(object):
         for line in self.fileobj:
             line = self.strip_comment(line)
             line = line.strip()
-            
+
             # If the line was all comment or whitespace then skip it
             if not line:
                 continue
