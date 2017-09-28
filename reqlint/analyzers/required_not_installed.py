@@ -22,7 +22,9 @@ class RequiredNotInstalledAnalyzer(object):
                 advice = Advice(
                     analyzer=self,
                     severity='error',
-                    message="Dependency '%s' is not installed" % pkg_req.as_display_name(),
+                    message=(
+                        "Required dependency '%s' is not installed" % pkg_req.as_display_name()
+                    ),
                 )
                 advice_list.append(advice)
 
@@ -30,7 +32,7 @@ class RequiredNotInstalledAnalyzer(object):
                 advice = Advice(
                     analyzer=self,
                     severity='error',
-                    message="Dependency '%s' is not satisfied by '%s'" % (
+                    message="Required dependency '%s' is not satisfied by installed '%s'" % (
                         pkg_req.as_display_name(),
                         pkg_installed.as_display_name(),
                     ),

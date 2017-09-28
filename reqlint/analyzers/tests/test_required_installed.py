@@ -33,12 +33,18 @@ def test_required_installed_analyzer():
             Advice(
                 analyzer=analyzer,
                 severity='debug',
-                message="Dependency 'coverage<3.6' is satisfied by 'coverage-3.5'",
+                message=(
+                    "Required dependency 'coverage<3.6' "
+                    "is satisfied by installed 'coverage-3.5'"
+                ),
             ),
             Advice(
                 analyzer=analyzer,
                 severity='debug',
-                message="Dependency 'parsimonious<=0.5' is satisfied by 'parsimonious-0.5'",
+                message=(
+                    "Required dependency 'parsimonious<=0.5' "
+                    "is satisfied by installed 'parsimonious-0.5'"
+                ),
             ),
         ],
     )

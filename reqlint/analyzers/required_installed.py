@@ -22,7 +22,7 @@ class RequiredInstalledAnalyzer(object):
                 advice = Advice(
                     analyzer=self,
                     severity='debug',
-                    message="Dependency '%s' is satisfied by '%s'" % (
+                    message="Required dependency '%s' is satisfied by installed '%s'" % (
                         pkg_req.as_display_name(),
                         pkg_installed.as_display_name(),
                     ),
