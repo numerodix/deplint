@@ -1,3 +1,7 @@
+from packaging.specifiers import SpecifierSet
+from packaging.version import Version
+
+
 class PackageRequirement(object):
     '''
     Represents a dependency declaration like: simplejson==1.2.
@@ -42,4 +46,8 @@ class PackageRequirement(object):
         if not self.name == installed_package.name:
             return False
 
-        # XXX
+        specifier_str = '%s%s' % (self.operator, self.version)
+        specifier = SpecifierSet(specifier_str)
+        version = Version(installed_package.version)
+
+        return specifier.contains(version)

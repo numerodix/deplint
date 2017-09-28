@@ -38,6 +38,11 @@ def test_required_not_installed_analyzer():
                 severity='error',
                 message="Dependency 'parsimonious<=0.5' is not installed",
             ),
+            Advice(
+                analyzer=analyzer,
+                severity='error',
+                message="Dependency 'six>=0.5' is not satisfied by 'six-0.4.9'",
+            ),
         ],
     )
 

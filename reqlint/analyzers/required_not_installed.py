@@ -17,11 +17,23 @@ class RequiredNotInstalledAnalyzer(object):
 
         for pkg_req in pkgs_required:
             pkg_installed = self.installed_packages.get_by_name(pkg_req.name)
+
             if not pkg_installed:
                 advice = Advice(
                     analyzer=self,
                     severity='error',
                     message="Dependency '%s' is not installed" % pkg_req.as_display_name(),
+                )
+                advice_list.append(advice)
+
+            if pkg_installed and not pkg_req.is_satisfied_by(pkg_installed):
+                advice = Advice(
+                    analyzer=self,
+                    severity='error',
+                    message="Dependency '%s' is not satisfied by '%s'" % (
+                        pkg_req.as_display_name(),
+                        pkg_installed.as_display_name(),
+                    ),
                 )
                 advice_list.append(advice)
 

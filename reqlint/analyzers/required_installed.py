@@ -17,7 +17,8 @@ class RequiredInstalledAnalyzer(object):
 
         for pkg_req in pkgs_required:
             pkg_installed = self.installed_packages.get_by_name(pkg_req.name)
-            if pkg_installed:
+
+            if pkg_installed and pkg_req.is_satisfied_by(pkg_installed):
                 advice = Advice(
                     analyzer=self,
                     severity='info',
