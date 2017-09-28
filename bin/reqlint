@@ -64,9 +64,17 @@ class RequirementsLinter(object):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Linter for requirements.txt')
+    parser = argparse.ArgumentParser(
+        description=(
+            'Linter for requirements.txt\n'
+            '\n'
+            'To see if requirements/installed packages are out of sync:\n'
+            '  reqlint -r requirements.txt --pip /path/to/venv/bin/pip'
+        ),
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
     parser.add_argument('--pip', dest='pip_path', metavar='<pip>',
-                        help='Path to pip program')
+                        help='Path to pip program (typically in a virtualenv)')
     parser.add_argument('-r', '--requirements', dest='requirements_txt',
                         metavar='<file>',
                         help='Path to requirements.txt file')
