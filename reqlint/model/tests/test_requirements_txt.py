@@ -1,4 +1,4 @@
-from reqlint.model.package import PackageRequirement
+from reqlint.model.package_requirement import PackageRequirement
 from reqlint.model.requirements_txt import RequirementsTxt
 
 

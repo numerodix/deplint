@@ -1,7 +1,7 @@
 import logging
 import re
 
-from reqlint.model.package import PackageRequirement
+from reqlint.model.package_requirement import PackageRequirement
 from reqlint.model.requirements_txt import RequirementsTxt
 
 
@@ -9,6 +9,10 @@ _logger = logging.getLogger(__name__)
 
 
 class RequirementsTxtParser(object):
+    '''
+    Parser for the requirements.txt file format.
+    '''
+
     rx_comment = re.compile('#.*$')
 
     # shorter operators last to prevent greedy matching from incorrect parsing

@@ -1,4 +1,8 @@
 class RequirementsTxt(object):
+    '''
+    Represents the contents of a requirements.txt file.
+    '''
+
     def __init__(self, packages):
         self.packages = packages
 

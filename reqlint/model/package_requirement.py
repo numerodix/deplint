@@ -1,4 +1,8 @@
 class PackageRequirement(object):
+    '''
+    Represents a dependency declaration like: simplejson==1.2.
+    '''
+
     def __init__(self, name, operator, version):
         self.name = name
         self.operator = operator

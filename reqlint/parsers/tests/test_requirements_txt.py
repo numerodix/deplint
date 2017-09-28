@@ -1,6 +1,6 @@
 from six import StringIO
 
-from reqlint.model.package import PackageRequirement
+from reqlint.model.package_requirement import PackageRequirement
 from reqlint.model.requirements_txt import RequirementsTxt
 from reqlint.parsers.requirements_txt import RequirementsTxtParser
 

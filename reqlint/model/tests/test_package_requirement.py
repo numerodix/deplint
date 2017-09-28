@@ -1,7 +1,7 @@
-from reqlint.model.package import PackageRequirement
+from reqlint.model.package_requirement import PackageRequirement
 
 
-def test_package_equality():
+def test_package_requirement_equality():
     pkg1 = PackageRequirement(name='simplejson', operator='==', version='1.1')
 
     # different operator
