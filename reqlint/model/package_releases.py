@@ -1,3 +1,5 @@
+import operator
+
 from packaging.version import Version
 
 
@@ -37,9 +39,9 @@ class PackageReleases(object):
 
     def get_more_recent_than_requirement(self, package_requirement):
         '''
-        Returns a clone of `self` that only includes versions more recent than
-        the version of `package_requirement`. If no such versions exists it
-        returns None.
+        Returns a clone of `self` that only includes one version more recent
+        than the version of `package_requirement`. If no such versions exists
+        it returns None.
         '''
 
         released_versions = [Version(ver) for ver in self.versions]
@@ -55,3 +57,37 @@ class PackageReleases(object):
                 name=self.name,
                 versions=(newest_version,),
             )
+
+    def update_installed(self, package_requirement, package_installed):
+        '''
+        Attempts to update `package_installed` such that it respects any
+        restrictions specified in `package_requirement`. (Only relevant if
+        `package_requirement` uses < or <= in its specifier.)
+
+        If a newer version can be found it returns a clone of `self` that only
+        includes one version more recent than the version of
+        `package_installed`. If no such versions exists it returns None.
+        '''
+
+        released_versions = [Version(ver) for ver in self.versions]
+        requirement_version = Version(package_requirement.version)
+        installed_version = Version(package_installed.version)
+
+        op = None
+        if package_requirement.operator == '<':
+            op = operator.lt
+        elif package_requirement.operator == '<=':
+            op = operator.le
+
+        if op:
+            released_versions.sort()
+            newer_versions = [ver for ver in released_versions
+                              if ver > installed_version and
+                              op(ver, requirement_version)]
+
+            if newer_versions:
+                newest_version = newer_versions[-1].base_version
+                return self.__class__(
+                    name=self.name,
+                    versions=(newest_version,),
+                )

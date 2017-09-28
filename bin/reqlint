@@ -59,7 +59,7 @@ class RequirementsLinter(object):
         # run the analyzers
         analyzer = CanBeUpgradedAnalyzer(
             requirements_txt=requirements_txt,
-            #installed_packages=installed_packages,
+            installed_packages=installed_packages,
             available_packages=available_packages,
         )
         advice_list = analyzer.analyze()
