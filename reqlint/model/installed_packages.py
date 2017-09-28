@@ -22,3 +22,8 @@ class InstalledPackages(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def get_by_name(self, package_name):
+        for pkg in self.packages:
+            if pkg.name == package_name:
+                return pkg
