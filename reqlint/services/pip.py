@@ -62,6 +62,6 @@ if __name__ == '__main__':
     logging.basicConfig()
     pip = Pip('pip')
     pkgs = pip.list_installed_packages()
-    print pkgs
+    print(pkgs)
     rels = pip.search_for_releases('six')
-    print rels
+    print(rels)
