@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from reqlint.model.package_releases import PackageReleases
-from reqlint.services.pip import Pip
+from reqlint.parsers.pip_search import PipSearchParser
 
 
 SEARCH_EXAMPLE_SIX = '''
@@ -143,16 +143,13 @@ xmlcmd (0.1.2)                     - half-baked support for adding --xml support
 '''
 
 
-def test_pip_search():
+def test_pip_search_parser():
     pkg_rels_expected = PackageReleases(
         name='six',
         versions=('1.10.0', '1.11.0'),
     )
 
-    pip = Pip(pip_path='/not/exists/pip')
-    pkg_rels = pip.parse_search_output(
-        package_name='six',
-        output=SEARCH_EXAMPLE_SIX,
-    )
+    parser = PipSearchParser(content=SEARCH_EXAMPLE_SIX)
+    pkg_rels = parser.parse(package_name='six')
 
     assert pkg_rels_expected == pkg_rels
