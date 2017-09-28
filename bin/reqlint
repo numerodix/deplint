@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+
+import argparse
+import logging
+import sys
+
+sys.path.append('.')
+from reqlint.parsers.requirements_txt import RequirementsTxtParser
+from reqlint.services.pip import Pip
+
+
+_logger = logging.getLogger(__name__)
+
+
+class RequirementsLinter(object):
+    def analyze(self, requirements_txt, pip_path):
+        parser = RequirementsTxtParser(fileobj=open(requirements_txt))
+        reqs = parser.parse()
+
+        pip = Pip(pip_path=pip_path)
+        for pkg in reqs.packages:
+            _logger.debug('Searching for package releases: %s', pkg.name)
+            pkg_rels = pip.search_for_releases(package_name=pkg.name)
+            print('Releases for %s: %s' % (
+                pkg.name,
+                ', '.join(sorted(pkg_rels.versions))
+            ))
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Linter for requirements.txt')
+    parser.add_argument('--pip', dest='pip_path', metavar='<pip>',
+                        help='Path to pip program')
+    parser.add_argument('-r', '--requirements', dest='requirements_txt',
+                        metavar='<file>',
+                        help='Path to requirements.txt file')
+    parser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
+                        help='Run in verbose mode')
+    args = parser.parse_args()
+
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.WARN,
+        format='[%(levelname)s] %(message)s',
+    )
+
+    if not all((args.pip_path, args.requirements_txt)):
+        parser.print_help()
+        sys.exit(2)
+
+    linter = RequirementsLinter()
+    linter.analyze(
+        requirements_txt=args.requirements_txt,
+        pip_path=args.pip_path,
+    )

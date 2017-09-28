@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 
 class Pip(object):
     pattern_name = '[A-Za-z0-9-_.]+'
-    pattern_version = '[0-9a-z.]+'
+    pattern_version = '[0-9a-z-.]+'
 
     # six (1.11.0)                       - Python 2 and 3 compatibility utilities
     rx_starting_line = re.compile(
