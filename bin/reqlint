@@ -11,18 +11,23 @@ from reqlint.analyzers.required_installed import RequiredInstalledAnalyzer
 from reqlint.analyzers.required_not_installed import RequiredNotInstalledAnalyzer
 from reqlint.parsers.requirements_txt import RequirementsTxtParser
 from reqlint.services.pip import Pip
+from reqlint.ui.writer import UiWriter
 
 
 _logger = logging.getLogger(__name__)
 
 
 class RequirementsLinter(object):
-    def analyze_installed(self, args):
+    def __init__(self, args):
+        self.args = args
+        self.ui = UiWriter(verbose=args.verbose)
+
+    def analyze_installed(self):
         # gather all the data we need to analyze
-        parser = RequirementsTxtParser(fileobj=open(args.requirements_txt))
+        parser = RequirementsTxtParser(fileobj=open(self.args.requirements_txt))
         requirements_txt = parser.parse()
 
-        pip = Pip(pip_path=args.pip_path)
+        pip = Pip(ui=self.ui, pip_path=self.args.pip_path)
         installed_packages = pip.list_installed_packages()
 
         # run the analyzers
@@ -40,12 +45,12 @@ class RequirementsLinter(object):
 
         return [advice_list1, advice_list2]
 
-    def analyze_upgrade(self, args):
+    def analyze_upgrade(self):
         # gather all the data we need to analyze
-        parser = RequirementsTxtParser(fileobj=open(args.requirements_txt))
+        parser = RequirementsTxtParser(fileobj=open(self.args.requirements_txt))
         requirements_txt = parser.parse()
 
-        pip = Pip(pip_path=args.pip_path)
+        pip = Pip(ui=self.ui, pip_path=self.args.pip_path)
         installed_packages = pip.list_installed_packages()
 
         package_names = [pkg.name for pkg in requirements_txt.packages]
@@ -61,15 +66,15 @@ class RequirementsLinter(object):
 
         return [advice_list]
 
-    def run(self, args):
-        print('Using pip: %s' % args.pip_path)
-        print('Using requirements.txt: %s' % args.requirements_txt)
+    def run(self):
+        self.ui.inform('Using pip: %s' % self.args.pip_path)
+        self.ui.inform('Using requirements.txt: %s' % self.args.requirements_txt)
 
-        if args.action == 'installed':
-            advice_lists = self.analyze_installed(args)
+        if self.args.action == 'installed':
+            advice_lists = self.analyze_installed()
 
-        elif args.action == 'upgrade':
-            advice_lists = self.analyze_upgrade(args)
+        elif self.args.action == 'upgrade':
+            advice_lists = self.analyze_upgrade()
 
         advice_all = itertools.chain(
             *(ad_list.advice_list for ad_list in advice_lists)
@@ -77,7 +82,7 @@ class RequirementsLinter(object):
 
         # display all advice
         for advice in advice_all:
-            print(advice.format_display_line())
+            self.ui.output(advice.format_display_line())
 
         # if we have any warnings or errors then exit with error
         if any((ad_list.has_problems() for ad_list in advice_lists)):
@@ -119,6 +124,6 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(2)
 
-    linter = RequirementsLinter()
-    exit_code = linter.run(args)
+    linter = RequirementsLinter(args)
+    exit_code = linter.run()
     sys.exit(exit_code)
