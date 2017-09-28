@@ -1,4 +1,3 @@
-from packaging.specifiers import SpecifierSet
 from packaging.version import Version
 
 
@@ -37,6 +36,12 @@ class PackageReleases(object):
         return '%s-%s' % (self.name, list(self.versions)[0])
 
     def get_more_recent_than_requirement(self, package_requirement):
+        '''
+        Returns a clone of `self` that only includes versions more recent than
+        the version of `package_requirement`. If no such versions exists it
+        returns None.
+        '''
+
         released_versions = [Version(ver) for ver in self.versions]
         requirement_version = Version(package_requirement.version)
 
@@ -48,5 +53,5 @@ class PackageReleases(object):
             newest_version = newer_versions[-1].base_version
             return self.__class__(
                 name=self.name,
-                versions=set((newest_version,)),
+                versions=(newest_version,),
             )

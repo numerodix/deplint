@@ -8,9 +8,8 @@ class CanBeUpgradedAnalyzer(object):
     package index.
     '''
 
-    def __init__(self, requirements_txt, installed_packages, available_packages):
+    def __init__(self, requirements_txt, available_packages):
         self.requirements_txt = requirements_txt
-        self.installed_packages = installed_packages
         self.available_packages = available_packages
 
     def analyze(self):
@@ -26,7 +25,7 @@ class CanBeUpgradedAnalyzer(object):
                 advice = Advice(
                     analyzer=self,
                     severity='info',
-                    message="Dependency '%s' can be upgraded to '%s'" % (
+                    message="Required dependency '%s' can be upgraded to '%s'" % (
                         pkg_req.as_display_name(),
                         pkg_releases.as_display_name_single(),
                     ),
