@@ -33,3 +33,8 @@ def test_advice_list_equality():
 
     assert advl1 != advl3
     assert not advl1 == advl3
+
+    # XXX improve this
+    assert advl1.has_problems() is False
+    assert advl2.has_problems() is False
+    assert advl3.has_problems() is True

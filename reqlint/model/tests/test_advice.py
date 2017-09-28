@@ -1,5 +1,12 @@
+import pytest
+
 from reqlint.analyzers.required_not_installed import RequiredNotInstalledAnalyzer
 from reqlint.model.advice import Advice
+
+
+def test_advice_ctor():
+    with pytest.raises(ValueError):
+        Advice(analyzer=None, severity='extreme', message='OK')
 
 
 def test_advice_equality():

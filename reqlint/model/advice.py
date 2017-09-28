@@ -4,11 +4,15 @@ class Advice(object):
     '''
 
     VALID_SEVERITIES = frozenset((
+        'debug',
+        'info',
+        'warn',
         'error',
     ))
 
     def __init__(self, analyzer, severity, message):
-        # XXX validate severity
+        if severity not in self.VALID_SEVERITIES:
+            raise ValueError("Invalid severity: %s" % severity)
 
         self.analyzer = analyzer
         self.severity = severity

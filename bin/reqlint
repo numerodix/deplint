@@ -33,21 +33,34 @@ class RequirementsLinter(object):
         return advice_list
 
     def analyze(self, requirements_txt, pip_path):
+        # gather all the data we need to analyze
         parser = RequirementsTxtParser(fileobj=open(requirements_txt))
         requirements_txt = parser.parse()
 
         pip = Pip(pip_path=pip_path)
         installed_packages = pip.list_installed_packages()
 
+        # run the analyzers
         advice_list1 = self.analyze_installed(requirements_txt, installed_packages)
         advice_list2 = self.analyze_not_installed(requirements_txt, installed_packages)
-        advice_list_all = itertools.chain(
-            advice_list1.advice_list,
-            advice_list2.advice_list,
+        advice_lists = [
+            advice_list1,
+            advice_list2,
+        ]
+
+        advice_all = itertools.chain(
+            *(ad_list.advice_list for ad_list in advice_lists)
         )
 
-        for advice in advice_list_all:
+        # display all advice
+        for advice in advice_all:
             print(advice.format_display_line())
+
+        # if we have any warnings or errors then exit with error
+        if any((ad_list.has_problems() for ad_list in advice_lists)):
+            return 1
+
+        return 0
 
 
 if __name__ == '__main__':
@@ -71,7 +84,8 @@ if __name__ == '__main__':
         sys.exit(2)
 
     linter = RequirementsLinter()
-    linter.analyze(
+    exit_code = linter.analyze(
         requirements_txt=args.requirements_txt,
         pip_path=args.pip_path,
     )
+    sys.exit(exit_code)

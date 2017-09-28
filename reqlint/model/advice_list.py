@@ -22,3 +22,11 @@ class AdviceList(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def has_problems(self):
+        # XXX this is a bit over specific
+        for advice in self.advice_list:
+            if advice.severity in ('warn', 'error'):
+                return True
+
+        return False
