@@ -37,7 +37,7 @@ class Advice(object):
 
     def format_display_line(self):
         return '[%s] %s: %s' % (
-            self.analyzer.__class__.__name__,
+            self.analyzer.__class__.__name__.replace('Analyzer', ''),
             self.severity,
             self.message,
         )

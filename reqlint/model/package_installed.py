@@ -25,3 +25,6 @@ class InstalledPackage(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def as_display_name(self):
+        return '%s-%s' % (self.name, self.version)

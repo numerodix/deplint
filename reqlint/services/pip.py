@@ -1,5 +1,4 @@
 import logging
-import re
 import subprocess
 
 from reqlint.parsers.pip_freeze import PipFreezeParser

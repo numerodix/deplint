@@ -37,5 +37,5 @@ def test_advice_format_display_line():
     adv1 = Advice(analyzer=analyzer1, severity='error', message='Package not good')
 
     assert adv1.format_display_line() == (
-        '[RequiredNotInstalledAnalyzer] error: Package not good'
+        '[RequiredNotInstalled] error: Package not good'
     )

@@ -81,7 +81,7 @@ class PipSearchParser(object):
                 versions = [version]
 
             if match_version:
-                keyword = match_version.groupdict()['keyword']
+                # keyword = match_version.groupdict()['keyword']
                 version = match_version.groupdict()['version']
                 versions.append(version)
 
@@ -100,4 +100,3 @@ if __name__ == '__main__':
     reqs = p.parse()
     for r in reqs.packages:
         print r
-
