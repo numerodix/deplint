@@ -21,7 +21,7 @@ class RequiredInstalledAnalyzer(object):
             if pkg_installed and pkg_req.is_satisfied_by(pkg_installed):
                 advice = Advice(
                     analyzer=self,
-                    severity='info',
+                    severity='debug',
                     message="Dependency '%s' is satisfied by '%s'" % (
                         pkg_req.as_display_name(),
                         pkg_installed.as_display_name(),

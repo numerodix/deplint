@@ -45,4 +45,4 @@ if __name__ == '__main__':
     p = RequirementsTxtParser(open(sys.argv[1]))
     reqs = p.parse()
     for r in reqs.packages:
-        print r
+        print(r)

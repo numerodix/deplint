@@ -32,12 +32,12 @@ def test_required_installed_analyzer():
         advice_list=[
             Advice(
                 analyzer=analyzer,
-                severity='info',
+                severity='debug',
                 message="Dependency 'coverage<3.6' is satisfied by 'coverage-3.5'",
             ),
             Advice(
                 analyzer=analyzer,
-                severity='info',
+                severity='debug',
                 message="Dependency 'parsimonious<=0.5' is satisfied by 'parsimonious-0.5'",
             ),
         ],
