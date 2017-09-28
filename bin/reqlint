@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import itertools
 import logging
 import sys
 
@@ -40,7 +41,10 @@ class RequirementsLinter(object):
 
         advice_list1 = self.analyze_installed(requirements_txt, installed_packages)
         advice_list2 = self.analyze_not_installed(requirements_txt, installed_packages)
-        advice_list_all = advice_list1 + advice_list2
+        advice_list_all = itertools.chain(
+            advice_list1.advice_list,
+            advice_list2.advice_list,
+        )
 
         for advice in advice_list_all:
             print(advice.format_display_line())

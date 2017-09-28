@@ -1,4 +1,5 @@
 from reqlint.model.advice import Advice
+from reqlint.model.advice_list import AdviceList
 
 
 class RequiredInstalledAnalyzer(object):
@@ -27,4 +28,4 @@ class RequiredInstalledAnalyzer(object):
                 )
                 advice_list.append(advice)
 
-        return advice_list
+        return AdviceList(advice_list=advice_list)

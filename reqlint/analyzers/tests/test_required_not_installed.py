@@ -1,5 +1,6 @@
 from reqlint.analyzers.required_not_installed import RequiredNotInstalledAnalyzer
 from reqlint.model.advice import Advice
+from reqlint.model.advice_list import AdviceList
 from reqlint.model.installed_packages import InstalledPackages
 from reqlint.model.package_installed import InstalledPackage
 from reqlint.model.package_requirement import PackageRequirement
@@ -29,12 +30,14 @@ def test_required_not_installed_analyzer():
     )
     advice_list = analyzer.analyze()
 
-    expected_advice_list = [
-        Advice(
-            analyzer=analyzer,
-            severity='error',
-            message="Dependency 'parsimonious<=0.5' is not installed",
-        ),
-    ]
+    expected_advice_list = AdviceList(
+        advice_list=[
+            Advice(
+                analyzer=analyzer,
+                severity='error',
+                message="Dependency 'parsimonious<=0.5' is not installed",
+            ),
+        ],
+    )
 
     assert expected_advice_list == advice_list

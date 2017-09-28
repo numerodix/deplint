@@ -1,5 +1,6 @@
 from reqlint.analyzers.required_installed import RequiredInstalledAnalyzer
 from reqlint.model.advice import Advice
+from reqlint.model.advice_list import AdviceList
 from reqlint.model.installed_packages import InstalledPackages
 from reqlint.model.package_installed import InstalledPackage
 from reqlint.model.package_requirement import PackageRequirement
@@ -27,17 +28,19 @@ def test_required_installed_analyzer():
     )
     advice_list = analyzer.analyze()
 
-    expected_advice_list = [
-        Advice(
-            analyzer=analyzer,
-            severity='info',
-            message="Dependency 'coverage<3.6' is satisfied by 'coverage-3.5'",
-        ),
-        Advice(
-            analyzer=analyzer,
-            severity='info',
-            message="Dependency 'parsimonious<=0.5' is satisfied by 'parsimonious-0.5'",
-        ),
-    ]
+    expected_advice_list = AdviceList(
+        advice_list=[
+            Advice(
+                analyzer=analyzer,
+                severity='info',
+                message="Dependency 'coverage<3.6' is satisfied by 'coverage-3.5'",
+            ),
+            Advice(
+                analyzer=analyzer,
+                severity='info',
+                message="Dependency 'parsimonious<=0.5' is satisfied by 'parsimonious-0.5'",
+            ),
+        ],
+    )
 
     assert expected_advice_list == advice_list
