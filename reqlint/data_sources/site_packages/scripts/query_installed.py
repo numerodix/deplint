@@ -59,7 +59,6 @@ def main(package_names):
             requires = dist.requires()
             requires_names = []
             for req in requires:
-                #project_name = req.project_name
                 project_name = req.key
                 requires_names.append(project_name)
 

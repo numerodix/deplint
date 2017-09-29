@@ -10,7 +10,7 @@ def test_package_installed_equality():
     # different version
     pkg3 = InstalledPackage(name='simplejson', version='1.2')
 
-    assert not pkg1 == None
+    assert not pkg1 == None  # noqa
     assert pkg1 == pkg1
     assert not pkg1 != pkg1
 

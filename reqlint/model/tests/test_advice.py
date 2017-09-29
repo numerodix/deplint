@@ -26,7 +26,7 @@ def test_advice_equality():
     # different message
     adv4 = Advice(analyzer=analyzer1, severity='error', message='Package very good')
 
-    assert not adv1 == None
+    assert not adv1 == None  # noqa
     assert adv1 == adv1
     assert not adv1 != adv1
 

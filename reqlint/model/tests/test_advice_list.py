@@ -25,7 +25,7 @@ def test_advice_list_equality():
         ],
     )
 
-    assert not advl1 == None
+    assert not advl1 == None  # noqa
     assert advl1 == advl1
     assert not advl1 != advl1
 

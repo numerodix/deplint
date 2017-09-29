@@ -2,13 +2,10 @@ from reqlint.analyzers.is_transitive_dep import IsTransitiveDepAnalyzer
 from reqlint.data_sources.site_packages.site_packages import SitePackages
 from reqlint.model.advice import Advice
 from reqlint.model.advice_list import AdviceList
-from reqlint.model.available_packages import AvailablePackages
 from reqlint.model.installed_packages import InstalledPackages
 from reqlint.model.package_installed import InstalledPackage
-from reqlint.model.package_releases import PackageReleases
 from reqlint.model.package_requirement import PackageRequirement
 from reqlint.model.requirements_txt import RequirementsTxt
-
 
 EXAMPLE_RESULTS_DICT = {
     "errors": [],

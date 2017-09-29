@@ -25,7 +25,7 @@ def test_installed_packages_equality():
         ],
     )
 
-    assert not reqs1 == None
+    assert not reqs1 == None  # noqa
     assert reqs1 == reqs1
     assert not reqs1 != reqs1
 

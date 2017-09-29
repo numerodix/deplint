@@ -33,7 +33,7 @@ def test_available_packages_equality():
         ],
     )
 
-    assert not avs1 == None
+    assert not avs1 == None  # noqa
     assert avs1 == avs1
     assert not avs1 != avs1
 
