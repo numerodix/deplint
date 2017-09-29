@@ -142,6 +142,12 @@ whs.utils.pyman (0.9.0)            - Utility for easy creation of help POSIX man
 xmlcmd (0.1.2)                     - half-baked support for adding --xml support to POSIX commands
 '''
 
+SEARCH_EXAMPLE_GARBAGE = '''
+AASDFA~!@#$!@#
+Some junk that cannot be parsed, but we do not crash the parser.
+@#$!@34/1
+'''
+
 
 def test_pip_search_parser():
     pkg_rels_expected = PackageReleases(
@@ -153,3 +159,8 @@ def test_pip_search_parser():
     pkg_rels = parser.parse(package_name='six')
 
     assert pkg_rels_expected == pkg_rels
+
+
+def test_pip_search_parser_garbage():
+    parser = PipSearchParser(content=SEARCH_EXAMPLE_GARBAGE)
+    parser.parse(package_name='six')  # does not raise

@@ -21,6 +21,7 @@ def test_package_requirement_equality():
     # different version
     pkg4 = PackageRequirement(name='simplejson', operator='==', version='1.2')
 
+    assert not pkg1 == None
     assert pkg1 == pkg1
     assert not pkg1 != pkg1
 
@@ -32,6 +33,11 @@ def test_package_requirement_equality():
 
     assert pkg1 != pkg4
     assert not pkg1 == pkg4
+
+    # Test repr
+    assert repr(pkg1) == (
+        "<PackageRequirement name='simplejson', operator='==', version='1.1'>"
+    )
 
 
 def test_package_requirement_display_name():

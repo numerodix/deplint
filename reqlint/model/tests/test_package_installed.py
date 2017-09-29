@@ -10,6 +10,7 @@ def test_package_installed_equality():
     # different version
     pkg3 = InstalledPackage(name='simplejson', version='1.2')
 
+    assert not pkg1 == None
     assert pkg1 == pkg1
     assert not pkg1 != pkg1
 
@@ -18,3 +19,8 @@ def test_package_installed_equality():
 
     assert pkg1 != pkg3
     assert not pkg1 == pkg3
+
+    # Test repr
+    assert repr(pkg1) == (
+        "<InstalledPackage name='simplejson', version='1.1'>"
+    )

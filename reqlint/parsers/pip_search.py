@@ -89,13 +89,3 @@ class PipSearchParser(object):
             versions=versions,
         )
         return pkg_rels
-
-
-if __name__ == '__main__':
-    import logging
-    import sys
-    logging.basicConfig()
-    p = RequirementsTxtParser(open(sys.argv[1]))
-    reqs = p.parse()
-    for r in reqs.packages:
-        print(r)

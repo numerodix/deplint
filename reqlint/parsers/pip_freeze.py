@@ -36,13 +36,3 @@ class PipFreezeParser(object):
             packages=pkgs,
         )
         return pkgs_installed
-
-
-if __name__ == '__main__':
-    import logging
-    import sys
-    logging.basicConfig()
-    p = RequirementsTxtParser(open(sys.argv[1]))
-    reqs = p.parse()
-    for r in reqs.packages:
-        print(r)

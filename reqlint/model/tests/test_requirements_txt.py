@@ -25,6 +25,7 @@ def test_requirements_txt_equality():
         ],
     )
 
+    assert not reqs1 == None
     assert reqs1 == reqs1
     assert not reqs1 != reqs1
 
@@ -33,3 +34,6 @@ def test_requirements_txt_equality():
 
     assert reqs1 != reqs3
     assert not reqs1 == reqs3
+
+    # Test repr
+    assert repr(reqs1) == '<RequirementsTxt num_packages=2>'

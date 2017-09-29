@@ -12,6 +12,7 @@ from reqlint.model.requirements_txt import RequirementsTxt
 def test_can_be_upgraded_analyzer():
     pkgs_available = AvailablePackages(
         packages=[
+            PackageReleases(name='abc', versions=('8.5', '8.6')),
             PackageReleases(name='coverage', versions=('3.5', '3.6', '4.0', '4.1')),
             PackageReleases(name='ply', versions=('0.5', '0.5.1')),
             PackageReleases(name='six', versions=('0.8', '0.9')),
@@ -20,6 +21,7 @@ def test_can_be_upgraded_analyzer():
 
     pkgs_reqs = RequirementsTxt(
         packages=[
+            PackageRequirement(name='abc', operator='<=', version='9.0'),
             PackageRequirement(name='coverage', operator='<', version='4.0'),  # -> 4.1
             PackageRequirement(name='ply', operator='==', version='0.5'),  # -> 0.5.1
             PackageRequirement(name='six', operator='==', version='0.9'),
@@ -28,6 +30,7 @@ def test_can_be_upgraded_analyzer():
 
     pkgs_installed = InstalledPackages(
         packages=[
+            InstalledPackage(name='abc', version='8.5'),  # -> 8.6
             InstalledPackage(name='coverage', version='3.5'),  # -> 3.6
         ],
     )
@@ -45,6 +48,14 @@ def test_can_be_upgraded_analyzer():
                 analyzer=analyzer,
                 severity='info',
                 message=(
+                    "Installed dependency 'abc-8.5' "
+                    "can be updated to 'abc-8.6'"
+                ),
+            ),
+            Advice(
+                analyzer=analyzer,
+                severity='info',
+                message=(
                     "Required dependency 'coverage<4.0' "
                     "can be upgraded to 'coverage-4.1'"
                 ),
@@ -54,7 +65,7 @@ def test_can_be_upgraded_analyzer():
                 severity='info',
                 message=(
                     "Installed dependency 'coverage-3.5' "
-                    "can be upgraded to 'coverage-3.6'"
+                    "can be updated to 'coverage-3.6'"
                 ),
             ),
             Advice(

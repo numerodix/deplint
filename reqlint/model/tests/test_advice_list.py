@@ -25,6 +25,7 @@ def test_advice_list_equality():
         ],
     )
 
+    assert not advl1 == None
     assert advl1 == advl1
     assert not advl1 != advl1
 
@@ -33,6 +34,11 @@ def test_advice_list_equality():
 
     assert advl1 != advl3
     assert not advl1 == advl3
+
+    # Test repr
+    assert repr(advl1) == (
+        "<AdviceList num_advice=2>"
+    )
 
     # XXX improve this
     assert advl1.has_problems() is False

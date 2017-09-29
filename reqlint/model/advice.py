@@ -21,7 +21,7 @@ class Advice(object):
     def __repr__(self):
         return '<%s analyzer=%r, severity=%r, message=%r>' % (
             self.__class__.__name__,
-            self.analyzer,
+            self.analyzer.__class__.__name__,
             self.severity,
             self.message,
         )

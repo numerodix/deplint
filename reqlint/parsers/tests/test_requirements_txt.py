@@ -17,6 +17,10 @@ ply~=3.10
 jsonpath===2.0.x
 '''
 
+REQS_EXAMPLE_GARBAGE = '''
+Something we do not recognize as valid.
+'''
+
 
 def test_requirements_txt_parser():
     reqs_expected = RequirementsTxt(
@@ -36,3 +40,8 @@ def test_requirements_txt_parser():
     reqs = parser.parse()
 
     assert reqs_expected == reqs
+
+
+def test_requirements_txt_parser_garbage():
+    parser = RequirementsTxtParser(fileobj=StringIO(REQS_EXAMPLE_GARBAGE))
+    parser.parse()  # does not raise

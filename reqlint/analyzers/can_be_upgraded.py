@@ -43,7 +43,7 @@ class CanBeUpgradedAnalyzer(object):
                     advice = Advice(
                         analyzer=self,
                         severity='info',
-                        message="Installed dependency '%s' can be upgraded to '%s'" % (
+                        message="Installed dependency '%s' can be updated to '%s'" % (
                             pkg_installed.as_display_name(),
                             pkg_release.as_display_name_single(),
                         ),

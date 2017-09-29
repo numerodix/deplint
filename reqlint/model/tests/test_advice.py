@@ -26,6 +26,7 @@ def test_advice_equality():
     # different message
     adv4 = Advice(analyzer=analyzer1, severity='error', message='Package very good')
 
+    assert not adv1 == None
     assert adv1 == adv1
     assert not adv1 != adv1
 
@@ -34,6 +35,12 @@ def test_advice_equality():
 
     assert adv1 != adv4
     assert not adv1 == adv4
+
+    # Test repr
+    assert repr(adv1) == (
+        "<Advice analyzer='RequiredNotInstalledAnalyzer', "
+        "severity='error', message='Package not good'>"
+    )
 
 
 def test_advice_format_display_line():

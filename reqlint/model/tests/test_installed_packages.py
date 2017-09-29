@@ -25,6 +25,7 @@ def test_installed_packages_equality():
         ],
     )
 
+    assert not reqs1 == None
     assert reqs1 == reqs1
     assert not reqs1 != reqs1
 
@@ -33,6 +34,11 @@ def test_installed_packages_equality():
 
     assert reqs1 != reqs3
     assert not reqs1 == reqs3
+
+    # Test repr
+    assert repr(reqs1) == (
+        "<InstalledPackages num_packages=2>"
+    )
 
 
 def test_installed_packages_get_by_name():

@@ -33,6 +33,7 @@ def test_available_packages_equality():
         ],
     )
 
+    assert not avs1 == None
     assert avs1 == avs1
     assert not avs1 != avs1
 
@@ -44,6 +45,11 @@ def test_available_packages_equality():
 
     assert avs1 != avs4
     assert not avs1 == avs4
+
+    # Test repr
+    assert repr(avs1) == (
+        "<AvailablePackages num_packages=2>"
+    )
 
 
 def test_available_packages_get_by_name():
