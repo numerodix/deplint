@@ -1,7 +1,6 @@
-from collections import namedtuple
 import subprocess
 import sys
-
+from collections import namedtuple
 
 InvokeResult = namedtuple('InvokeResult', ['exit_code', 'stdout', 'stderr'])
 
