@@ -7,7 +7,7 @@ virtualenv in order to query its installed packages in site-packages.
 import json
 import sys
 
-# TODO handle failure modes:
+# Expected failure modes:
 # - pkg_resources not available
 # - pkg not installed
 # - pkg has no top_level
@@ -16,37 +16,55 @@ TOP_LEVEL_FILENAME = 'top_level.txt'
 
 
 def main(package_names):
-    import pkg_resources
+    results_dict = {
+        'errors': [],
+        'packages': {},
+    }
 
-    results_dict = {}
+    try:
+        import pkg_resources
+    except ImportError:
+        results_dict['errors'].append('missing-pkg-resources')
+        return results_dict
 
     for package_name in package_names:
-        pkg_dict = {}
+        pkg_dict = {
+            'errors': [],
+            'requires': [],
+            'top_levels': [],
+            'version': None,
+        }
 
-        dist = pkg_resources.get_distribution(package_name)
+        dist = None
+        try:
+            dist = pkg_resources.get_distribution(package_name)
+        except pkg_resources.DistributionNotFound:
+            pkg_dict['errors'].append('error-not-installed')
 
-        # detect top_level
-        top_levels = []
-        if dist._provider.has_metadata(TOP_LEVEL_FILENAME):
-            top_level_bytes = dist._provider.get_metadata(TOP_LEVEL_FILENAME)
-            top_levels = top_level_bytes.strip().splitlines()
+        if dist:
+            if dist.has_version():
+                pkg_dict['version'] = dist.version
 
-        pkg_dict['top_levels'] = top_levels
+            # detect top_level
+            if dist._provider.has_metadata(TOP_LEVEL_FILENAME):
+                top_level_bytes = dist._provider.get_metadata(TOP_LEVEL_FILENAME)
+                top_levels = top_level_bytes.strip().splitlines()
+                pkg_dict['top_levels'] = top_levels
 
-        # detect this package's dependencies
-        requires = dist.requires()
-        requires_names = []
-        for req in requires:
-            project_name = req.project_name
-            requires_names.append(project_name)
+            # detect this package's dependencies
+            requires = dist.requires()
+            requires_names = []
+            for req in requires:
+                project_name = req.project_name
+                requires_names.append(project_name)
 
-            # append to our worklist
-            if project_name not in package_names:
-                package_names.append(project_name)
+                # append to our worklist
+                if project_name not in package_names:
+                    package_names.append(project_name)
 
-        pkg_dict['requires'] = requires_names
+            pkg_dict['requires'] = requires_names
 
-        results_dict[package_name] = pkg_dict
+        results_dict['packages'][package_name] = pkg_dict
 
     return results_dict
 
