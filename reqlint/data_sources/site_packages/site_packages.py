@@ -70,9 +70,10 @@ class SitePackages(object):
                     worklist.append(name)
 
                     # If `package_name` was previously discovered to be a
-                    # dependent and now turns out to be a dependency or
-                    # something else then it was an intermediate node and it's
-                    # not a top level package, so remove it from the dependents.
+                    # dependent and now turns out to be a dependency of
+                    # something else then it turns out to be an intermediate
+                    # node - not a top level package - so remove it from the
+                    # dependents.
                     if package_name in dependents:
                         dependents.remove(package_name)
 

@@ -22,15 +22,16 @@ _logger = logging.getLogger(__name__)
 class RequirementsLinter(object):
     def __init__(self, args):
         self.args = args
+
         self.ui = UiWriter(verbose=args.verbose)
+        self.pip = Pip(ui=self.ui, python_path=self.args.python_path)
 
     def analyze_installed(self):
         # gather all the data we need to analyze
         parser = RequirementsTxtParser(fileobj=open(self.args.requirements_txt))
         requirements_txt = parser.parse()
 
-        pip = Pip(ui=self.ui, pip_path=self.args.pip_path)
-        installed_packages = pip.list_installed_packages()
+        installed_packages = self.pip.list_installed_packages()
 
         # run the analyzers
         analyzer = RequiredInstalledAnalyzer(
@@ -52,8 +53,7 @@ class RequirementsLinter(object):
         parser = RequirementsTxtParser(fileobj=open(self.args.requirements_txt))
         requirements_txt = parser.parse()
 
-        pip = Pip(ui=self.ui, pip_path=self.args.pip_path)
-        installed_packages = pip.list_installed_packages()
+        installed_packages = self.pip.list_installed_packages()
 
         installed_names = [pkg.name for pkg in installed_packages.packages]
         site_packages = SitePackages(
@@ -76,11 +76,10 @@ class RequirementsLinter(object):
         parser = RequirementsTxtParser(fileobj=open(self.args.requirements_txt))
         requirements_txt = parser.parse()
 
-        pip = Pip(ui=self.ui, pip_path=self.args.pip_path)
-        installed_packages = pip.list_installed_packages()
+        installed_packages = self.pip.list_installed_packages()
 
         package_names = [pkg.name for pkg in requirements_txt.packages]
-        available_packages = pip.search_for_packages(package_names)
+        available_packages = self.pip.search_for_packages(package_names)
 
         # run the analyzers
         analyzer = CanBeUpgradedAnalyzer(
@@ -93,7 +92,8 @@ class RequirementsLinter(object):
         return [advice_list]
 
     def run(self):
-        self.ui.inform('Using pip: %s' % self.args.pip_path)
+        self.ui.inform('Using python: %s' % self.args.python_path)
+        self.ui.inform('Using pip: %s' % self.pip.pip_path)
         self.ui.inform('Using requirements.txt: %s' % self.args.requirements_txt)
 
         if self.args.action == 'installed':
@@ -125,18 +125,19 @@ if __name__ == '__main__':
         description=(
             'Linter for requirements.txt\n'
             '\n'
-            'To see if all requirements are installed:\n'
-            '  reqlinter installed -r requirements.txt --pip /path/to/venv/bin/pip\n'
+            'Are all requirements installed to the correct version?\n'
+            '  reqlinter installed -r requirements.txt --python /path/to/venv/bin/python\n'
             '\n'
-            'To see if any requirements can be upgraded:\n'
-            '  reqlinter upgrade -r requirements.txt --pip /path/to/venv/bin/pip'
+            'Can any of the requirements be upgraded?\n'
+            '  reqlinter upgrade -r requirements.txt --python /path/to/venv/bin/python\n'
+            '\n'
+            'Are any of the requirements transitive dependencies and can be dropped?\n'
+            '  reqlinter tracked -r requirements.txt --python /path/to/venv/bin/python'
         ),
         formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument('action', choices=('installed', 'tracked', 'upgrade'),
                         help='Action to take')
-    parser.add_argument('--pip', dest='pip_path', metavar='<pip>',
-                        help='Path to pip program (typically in a virtualenv)')
     parser.add_argument('--python', dest='python_path', metavar='<python>',
                         help='Path to python program (typically in a virtualenv)')
     parser.add_argument('-r', '--requirements', dest='requirements_txt',
@@ -151,7 +152,7 @@ if __name__ == '__main__':
         format='[%(levelname)s] %(name)s %(message)s',
     )
 
-    if not all((args.pip_path, args.requirements_txt)):
+    if not all((args.python_path, args.requirements_txt)):
         parser.print_help()
         sys.exit(2)
 

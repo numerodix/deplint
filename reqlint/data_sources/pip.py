@@ -1,4 +1,5 @@
 import logging
+import os
 import subprocess
 
 from reqlint.model.available_packages import AvailablePackages
@@ -9,9 +10,11 @@ _logger = logging.getLogger(__name__)
 
 
 class Pip(object):
-    def __init__(self, ui, pip_path):
+    def __init__(self, ui, python_path):
         self.ui = ui
-        self.pip_path = pip_path
+        self.python_path = python_path
+        bin_dir = os.path.dirname(self.python_path)
+        self.pip_path = os.path.join(bin_dir, 'pip')
 
     # Low level interface
 

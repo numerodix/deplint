@@ -51,6 +51,10 @@ class IsTransitiveDepAnalyzer(object):
 
                 # Check if it's a required dependency
                 if pkg_req:
+                    # TODO: Here we should pick a dependent which is also a
+                    # requirement, rather than (possibly) getting an untracked
+                    # top level package (which will be reported in the case
+                    # above anyway)
                     first_dependent = dependents[0]
                     dependent_req = self.requirements_txt.get_by_name(
                         first_dependent,
