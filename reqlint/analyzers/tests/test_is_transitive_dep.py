@@ -76,6 +76,17 @@ EXAMPLE_RESULTS_DICT = {
             ],
             "version": "2.6"
         },
+        "ipdb": {
+            "errors": [],
+            "requires": [
+                "setuptools",
+                "ipython"
+            ],
+            "top_levels": [
+                "ipdb"
+            ],
+            "version": "0.10.3"
+        },
         "itsdangerous": {
             "errors": [],
             "requires": [],
@@ -125,6 +136,12 @@ EXAMPLE_RESULTS_DICT = {
             ],
             "version": "0.4.8"
         },
+        "pkg-resources": {
+            "errors": [],
+            "requires": [],
+            "top_levels": [],
+            "version": "0.0.0"
+        },
         "pyzmq": {
             "errors": [],
             "requires": [],
@@ -145,6 +162,16 @@ EXAMPLE_RESULTS_DICT = {
                 "requests"
             ],
             "version": "2.18.4"
+        },
+        "setuptools": {
+            "errors": [],
+            "requires": [],
+            "top_levels": [
+                "easy_install",
+                "pkg_resources",
+                "setuptools"
+            ],
+            "version": "36.5.0"
         },
         "six": {
             "errors": [],
@@ -185,6 +212,7 @@ def test_can_be_upgraded_analyzer():
 
     pkgs_installed = InstalledPackages(
         packages=[
+            # locustio dependency closure
             InstalledPackage(name='Flask', version='0.12.2'),
             InstalledPackage(name='Jinja2', version='2.9.6'),
             InstalledPackage(name='MarkupSafe', version='1.0'),
@@ -202,6 +230,14 @@ def test_can_be_upgraded_analyzer():
             InstalledPackage(name='requests', version='2.18.4'),
             InstalledPackage(name='six', version='1.11.0'),
             InstalledPackage(name='urllib3', version='1.22'),
+
+            # top level dependencies, but not reported as they are known
+            # "virtual" dependencies
+            InstalledPackage(name='pkg-resources', version='0.0.0'),
+            InstalledPackage(name='setuptools', version='36.5.0'),
+
+            # top level dependency that is not required - should be reported
+            InstalledPackage(name='ipdb', version='0.10.3'),
         ],
     )
 
@@ -235,6 +271,14 @@ def test_can_be_upgraded_analyzer():
                 message=(
                     "Required dependency 'Jinja2==2.9.6' "
                     "is a transitive dependency of 'locustio==0.8a2'"
+                ),
+            ),
+            Advice(
+                analyzer=analyzer,
+                severity='warn',
+                message=(
+                    "Installed non-transitive dependency 'ipdb-0.10.3' "
+                    "is not required"
                 ),
             ),
         ],
