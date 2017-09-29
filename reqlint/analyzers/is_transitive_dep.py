@@ -8,6 +8,13 @@ class IsTransitiveDepAnalyzer(object):
     other packages).
     '''
 
+    # These are known "virtual" dependencies - do not report these as missing
+    # from requirements.txt
+    VIRTUAL_DEPENDENCIES = frozenset((
+        'pkg-resources',
+        'setuptools',
+    ))
+
     def __init__(self, requirements_txt, installed_packages, site_packages):
         self.requirements_txt = requirements_txt
         self.installed_packages = installed_packages
@@ -16,28 +23,56 @@ class IsTransitiveDepAnalyzer(object):
     def analyze(self):
         advice_list = []
 
-        # Of the required packages, find all the installed ones (we can only do
-        # transitive dependency checking on installed packages)
-        pkgs_pairs = [(pkg_req, self.installed_packages.get_by_name(pkg_req.name))
-                      for pkg_req in self.requirements_txt.packages]
-        pkgs_pairs = [(pkg_req, pkg_ins) for (pkg_req, pkg_ins) in pkgs_pairs
-                      if pkg_ins]
+        pkgs_installed = self.installed_packages.packages
 
-        for pkg_req, pkg_ins in pkgs_pairs:
+        for pkg_ins in pkgs_installed:
 
+            pkg_req = self.requirements_txt.get_by_name(pkg_ins.name)
             dependents = self.site_packages.get_package_dependents(pkg_ins.name)
-            if dependents:
-                advice = Advice(
-                    analyzer=self,
-                    severity='info',
-                    message=(
-                        "Required dependency '%s' is a transitive dependency of '%s'"
-                    ) % (
-                        pkg_req.as_display_name(),
-                        # TODO: trace this back to an item in self.requirements_txt
-                        dependents[0],
-                    ),
-                )
-                advice_list.append(advice)
+
+            # The installed dependency is not a transitive dependency
+            if not dependents:
+
+                # Check if it's a required dependency
+                if not pkg_req and pkg_ins.name not in self.VIRTUAL_DEPENDENCIES:
+                    advice = Advice(
+                        analyzer=self,
+                        severity='warn',
+                        message=(
+                            "Installed non-transitive dependency '%s' is not required"
+                        ) % (
+                            pkg_ins.as_display_name(),
+                        ),
+                    )
+                    advice_list.append(advice)
+
+            # The installed dependency is a transitive dependency
+            elif dependents:
+
+                # Check if it's a required dependency
+                if pkg_req:
+                    first_dependent = dependents[0]
+                    dependent_req = self.requirements_txt.get_by_name(
+                        first_dependent,
+                        ignore_case=True,
+                    )
+
+                    # This is displayed as:
+                    #   requests==2.18.4' is a transitive dependency of 'datadog==0.16.0'
+                    # and is a bit misleading, because we know it's the package
+                    # by name that is a transitive dependency, not by exact
+                    # version...
+                    advice = Advice(
+                        analyzer=self,
+                        severity='info',
+                        message=(
+                            "Required dependency '%s' is a transitive dependency of '%s'"
+                        ) % (
+                            pkg_req.as_display_name(),
+                            (dependent_req.as_display_name() if dependent_req
+                             else first_dependent),
+                        ),
+                    )
+                    advice_list.append(advice)
 
         return AdviceList(advice_list=advice_list)

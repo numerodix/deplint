@@ -22,3 +22,13 @@ class RequirementsTxt(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def get_by_name(self, package_name, ignore_case=False):
+        for pkg in self.packages:
+            if ignore_case:
+                if pkg.name.lower() == package_name.lower():
+                    return pkg
+
+            else:
+                if pkg.name == package_name:
+                    return pkg

@@ -6,7 +6,7 @@ import subprocess
 class SitePackages(object):
     def __init__(self, python_path, installed_package_names):
         self.python_path = python_path
-        self.installed_package_names = installed_package_names
+        self.installed_package_names = [name.lower() for name in installed_package_names]
 
         self._query_cache = None
 
@@ -42,6 +42,7 @@ class SitePackages(object):
     # Higher level interface
 
     def get_package_top_levels(self, package_name):
+        package_name = package_name.lower()
         results_dict = self.query_installed_packages()
 
         pkg_dict = results_dict['packages'][package_name]
@@ -49,11 +50,30 @@ class SitePackages(object):
         return top_levels
 
     def get_package_dependents(self, package_name):
+        package_name = package_name.lower()
         results_dict = self.query_installed_packages()
 
+        # use a worklist since we are traversing the dep graph from leaf
+        # towards root
+        worklist = [package_name]
         dependents = []
-        for name, pkg_dict in results_dict['packages'].items():
-            if package_name in pkg_dict['requires']:
-                dependents.append(name)
+
+        for package_name in worklist:
+
+            for name, pkg_dict in results_dict['packages'].items():
+                if package_name in pkg_dict['requires']:
+                    # `package_name` is required by (a dependency of) `name`,
+                    # therefore `name` is a dependent.
+                    dependents.append(name)
+                    # We also need to add `name` to the worklist since it could
+                    # be an intermediate node and not a root dependency.
+                    worklist.append(name)
+
+                    # If `package_name` was previously discovered to be a
+                    # dependent and now turns out to be a dependency or
+                    # something else then it was an intermediate node and it's
+                    # not a top level package, so remove it from the dependents.
+                    if package_name in dependents:
+                        dependents.remove(package_name)
 
         return dependents

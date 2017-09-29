@@ -28,6 +28,10 @@ def main(package_names):
         return results_dict
 
     for package_name in package_names:
+        # NOTE: make sure we lower case the package name, since depedencies in
+        # the python world are not case sensitive
+        package_name_key = package_name.lower()
+
         pkg_dict = {
             'errors': [],
             'requires': [],
@@ -37,7 +41,7 @@ def main(package_names):
 
         dist = None
         try:
-            dist = pkg_resources.get_distribution(package_name)
+            dist = pkg_resources.get_distribution(package_name_key)
         except pkg_resources.DistributionNotFound:
             pkg_dict['errors'].append('error-not-installed')
 
@@ -55,7 +59,8 @@ def main(package_names):
             requires = dist.requires()
             requires_names = []
             for req in requires:
-                project_name = req.project_name
+                #project_name = req.project_name
+                project_name = req.key
                 requires_names.append(project_name)
 
                 # append to our worklist
@@ -64,7 +69,7 @@ def main(package_names):
 
             pkg_dict['requires'] = requires_names
 
-        results_dict['packages'][package_name] = pkg_dict
+        results_dict['packages'][package_name_key] = pkg_dict
 
     return results_dict
 
