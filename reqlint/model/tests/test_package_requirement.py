@@ -9,6 +9,18 @@ def test_package_requirement_ctor():
         PackageRequirement(name='simplejson', operator='<<', version='1.1')
 
 
+def test_package_requirement_operator_and_version():
+    pkg = PackageRequirement(name='simplejson', operator=None, version=None)
+
+    assert pkg.has_operator() is False
+    with pytest.raises(RuntimeError):
+        pkg.operator
+
+    assert pkg.has_version() is False
+    with pytest.raises(RuntimeError):
+        pkg.version
+
+
 def test_package_requirement_equality():
     pkg1 = PackageRequirement(name='simplejson', operator='==', version='1.1')
 
@@ -42,8 +54,10 @@ def test_package_requirement_equality():
 
 def test_package_requirement_display_name():
     pkg1 = PackageRequirement(name='simplejson', operator='==', version='1.1')
-
     assert pkg1.as_display_name() == 'simplejson==1.1'
+
+    pkg2 = PackageRequirement(name='simplejson', operator=None, version=None)
+    assert pkg2.as_display_name() == 'simplejson'
 
 
 def test_package_requirement_is_satisfied_by():
@@ -93,3 +107,15 @@ def test_package_requirement_is_satisfied_by():
     # above version
     ins9 = InstalledPackage(name='Django', version='5.1')
     assert req3.is_satisfied_by(ins9) is True
+
+
+    # Testing without version
+    req1 = PackageRequirement(name='simplejson', operator=None, version=None)
+
+    # wrong name
+    ins1 = InstalledPackage(name='six', version='1.1')
+    assert req1.is_satisfied_by(ins1) is False
+
+    # any version match
+    ins2 = InstalledPackage(name='simplejson', version='1.1')
+    assert req1.is_satisfied_by(ins2) is True

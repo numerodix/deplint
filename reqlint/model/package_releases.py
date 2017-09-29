@@ -45,9 +45,14 @@ class PackageReleases(object):
         '''
 
         released_versions = [Version(ver) for ver in self.versions]
-        requirement_version = Version(package_requirement.version)
-
         released_versions.sort()
+
+        # If the requirement has no version do not filter at all
+        if not package_requirement.has_version():
+            return
+
+        # Otherwise filter on versions more recent than requirement
+        requirement_version = Version(package_requirement.version)
         newer_versions = [ver for ver in released_versions
                           if ver > requirement_version]
 
@@ -70,24 +75,33 @@ class PackageReleases(object):
         '''
 
         released_versions = [Version(ver) for ver in self.versions]
-        requirement_version = Version(package_requirement.version)
+        released_versions.sort()
+
         installed_version = Version(package_installed.version)
 
-        op = None
-        if package_requirement.operator == '<':
-            op = operator.lt
-        elif package_requirement.operator == '<=':
-            op = operator.le
-
-        if op:
-            released_versions.sort()
+        # If the requirement has no version do not filter using requirement
+        if not package_requirement.has_version():
             newer_versions = [ver for ver in released_versions
-                              if ver > installed_version and
-                              op(ver, requirement_version)]
+                              if ver > installed_version]
 
-            if newer_versions:
-                newest_version = newer_versions[-1].base_version
-                return self.__class__(
-                    name=self.name,
-                    versions=(newest_version,),
-                )
+        # Otherwise apply upper bound filter using requirement version
+        else:
+            requirement_version = Version(package_requirement.version)
+
+            op = None
+            if package_requirement.operator == '<':
+                op = operator.lt
+            elif package_requirement.operator == '<=':
+                op = operator.le
+
+            if op:
+                newer_versions = [ver for ver in released_versions
+                                  if ver > installed_version and
+                                  op(ver, requirement_version)]
+
+        if newer_versions:
+            newest_version = newer_versions[-1].base_version
+            return self.__class__(
+                name=self.name,
+                versions=(newest_version,),
+            )

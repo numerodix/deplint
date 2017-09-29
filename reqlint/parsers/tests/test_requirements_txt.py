@@ -15,6 +15,7 @@ tox>1.6.1
 mock!=5.1.1
 ply~=3.10
 jsonpath===2.0.x
+simplejson
 '''
 
 REQS_EXAMPLE_GARBAGE = '''
@@ -33,6 +34,7 @@ def test_requirements_txt_parser():
             PackageRequirement(name='mock', operator='!=', version='5.1.1'),
             PackageRequirement(name='ply', operator='~=', version='3.10'),
             PackageRequirement(name='jsonpath', operator='===', version='2.0.x'),
+            PackageRequirement(name='simplejson', operator=None, version=None),
         ],
     )
 

@@ -15,11 +15,25 @@ class RequirementsTxtParser(object):
     # comment at the beginning of line after whitespace
     rx_comment = re.compile('(?:^|\s+)#.*$')
 
+    # https://www.python.org/dev/peps/pep-0508/
+    pattern_name = '[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9._-]*[A-Za-z0-9]'
+
     # shorter operators last to prevent greedy matching from incorrect parsing
     version_operators = PackageRequirement.VALID_OPERATORS
     version_operators_joined = '|'.join((re.escape(op) for op in version_operators))
+
+    rx_name = re.compile(
+        '^'
+        '(?P<name>' + pattern_name + ')'
+        '$'
+    )
+
     rx_name_op_version = re.compile(
-        '^(?P<name>.*?)(?P<operator>' + version_operators_joined + ')(?P<version>.*)$'
+        '^'
+        '(?P<name>' + pattern_name + ')'
+        '(?P<operator>' + version_operators_joined + ')'
+        '(?P<version>.*)'
+        '$'
     )
 
     def __init__(self, fileobj):
@@ -42,16 +56,18 @@ class RequirementsTxtParser(object):
                 continue
 
             match = self.rx_name_op_version.match(line)
+            if not match:
+                match = self.rx_name.match(line)
 
             # Was unable to parse the line
-            if not match or not len(match.groups()) == 3:
+            if not match or not len(match.groups()) in [1, 3]:
                 _logger.warn('Unable to parse requirements line: %s', line)
                 continue
 
             pkg = PackageRequirement(
                 name=match.groupdict()['name'],
-                operator=match.groupdict()['operator'],
-                version=match.groupdict()['version'],
+                operator=match.groupdict().get('operator'),
+                version=match.groupdict().get('version'),
             )
             pkgs.append(pkg)
 
