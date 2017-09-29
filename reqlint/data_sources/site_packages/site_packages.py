@@ -25,7 +25,8 @@ class SitePackages(object):
         ] + package_names
 
         output_bytes = subprocess.check_output(args)
-        results_dict = json.loads(output_bytes)
+        output = output_bytes.decode('utf-8')
+        results_dict = json.loads(output)
         return results_dict
 
     def query_installed_packages(self):
