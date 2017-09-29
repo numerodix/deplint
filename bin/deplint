@@ -9,10 +9,12 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from deplint.analyzers.can_be_upgraded import CanBeUpgradedAnalyzer
 from deplint.analyzers.is_transitive_dep import IsTransitiveDepAnalyzer
+from deplint.analyzers.is_unused import IsUnusedAnalyzer
 from deplint.analyzers.required_installed import RequiredInstalledAnalyzer
 from deplint.analyzers.required_not_installed import RequiredNotInstalledAnalyzer
 from deplint.data_sources.pip import Pip
 from deplint.data_sources.site_packages.site_packages import SitePackages
+from deplint.data_sources.source_code.git_grep import GitGrep
 from deplint.parsers.requirements_txt import RequirementsTxtParser
 from deplint.ui.writer import UiWriter
 
@@ -26,6 +28,8 @@ class RequirementsLinter(object):
 
         self.ui = UiWriter(verbose=args.verbose)
         self.pip = Pip(ui=self.ui, python_path=self.args.python_path)
+
+        self.grep = GitGrep(basedir=args.basedir)
 
     def analyze_installed(self):
         # gather all the data we need to analyze
@@ -92,9 +96,34 @@ class RequirementsLinter(object):
 
         return [advice_list]
 
+    def analyze_unused(self):
+        # gather all the data we need to analyze
+        parser = RequirementsTxtParser(fileobj=open(self.args.requirements_txt))
+        requirements_txt = parser.parse()
+
+        installed_packages = self.pip.list_installed_packages()
+
+        installed_names = [pkg.name for pkg in installed_packages.packages]
+        site_packages = SitePackages(
+            python_path=args.python_path,
+            installed_package_names=installed_names,
+        )
+
+        # run the analyzers
+        analyzer = IsUnusedAnalyzer(
+            requirements_txt=requirements_txt,
+            installed_packages=installed_packages,
+            site_packages=site_packages,
+            grep=self.grep,
+        )
+        advice_list = analyzer.analyze()
+
+        return [advice_list]
+
     def run(self):
         self.ui.inform('Using python: %s' % self.args.python_path)
         self.ui.inform('Using pip: %s' % self.pip.pip_path)
+        self.ui.inform('Using basedir: %s' % self.args.basedir)
         self.ui.inform('Using requirements.txt: %s' % self.args.requirements_txt)
 
         if self.args.action == 'installed':
@@ -105,6 +134,9 @@ class RequirementsLinter(object):
 
         elif self.args.action == 'upgrade':
             advice_lists = self.analyze_upgrade()
+
+        elif self.args.action == 'unused':
+            advice_lists = self.analyze_unused()
 
         advice_all = itertools.chain(
             *(ad_list.advice_list for ad_list in advice_lists)
@@ -133,12 +165,17 @@ if __name__ == '__main__':
             '  deplint upgrade -r requirements.txt --python /path/to/venv/bin/python\n'
             '\n'
             'Are any of the requirements transitive dependencies and can be dropped?\n'
-            '  deplint tracked -r requirements.txt --python /path/to/venv/bin/python'
+            '  deplint tracked -r requirements.txt --python /path/to/venv/bin/python\n'
+            '\n'
+            'Are any of the requirements not used in the code?\n'
+            '  deplint unused -r requirements.txt --python /path/to/venv/bin/python'
         ),
         formatter_class=argparse.RawTextHelpFormatter,
     )
-    parser.add_argument('action', choices=('installed', 'tracked', 'upgrade'),
+    parser.add_argument('action', choices=('installed', 'tracked', 'upgrade', 'unused'),
                         help='Action to take')
+    parser.add_argument('-b', '--basedir', dest='basedir', metavar='<basedir>',
+                        help='The base directory of the project')
     parser.add_argument('-p', '--python', dest='python_path', metavar='<python>',
                         help='Path to python program (typically in a virtualenv)')
     parser.add_argument('-r', '--requirements', dest='requirements_txt',
@@ -152,6 +189,9 @@ if __name__ == '__main__':
         level=logging.DEBUG if args.verbose else logging.ERROR,
         format='[%(levelname)s] %(name)s %(message)s',
     )
+
+    if not args.basedir:
+        args.basedir = os.path.dirname(args.requirements_txt)
 
     if not all((args.python_path, args.requirements_txt)):
         parser.print_help()
