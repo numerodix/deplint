@@ -24,7 +24,7 @@ def test_package_releases_equality():
 
     # Test repr
     assert repr(pkg1) == (
-        "<PackageReleases name='simplejson', versions=set(['1.0', '1.1'])>"
+        "<PackageReleases name='simplejson', versions=['1.0', '1.1']>"
     )
 
 

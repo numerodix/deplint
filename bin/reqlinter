@@ -9,8 +9,8 @@ sys.path.append('.')
 from reqlint.analyzers.can_be_upgraded import CanBeUpgradedAnalyzer
 from reqlint.analyzers.required_installed import RequiredInstalledAnalyzer
 from reqlint.analyzers.required_not_installed import RequiredNotInstalledAnalyzer
+from reqlint.data_sources.pip import Pip
 from reqlint.parsers.requirements_txt import RequirementsTxtParser
-from reqlint.services.pip import Pip
 from reqlint.ui.writer import UiWriter
 
 
@@ -97,10 +97,10 @@ if __name__ == '__main__':
             'Linter for requirements.txt\n'
             '\n'
             'To see if all requirements are installed:\n'
-            '  reqlint installed -r requirements.txt --pip /path/to/venv/bin/pip\n'
+            '  reqlinter installed -r requirements.txt --pip /path/to/venv/bin/pip\n'
             '\n'
             'To see if any requirements can be upgraded:\n'
-            '  reqlint upgrade -r requirements.txt --pip /path/to/venv/bin/pip'
+            '  reqlinter upgrade -r requirements.txt --pip /path/to/venv/bin/pip'
         ),
         formatter_class=argparse.RawTextHelpFormatter,
     )

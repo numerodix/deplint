@@ -16,7 +16,7 @@ class PackageReleases(object):
         return '<%s name=%r, versions=%r>' % (
             self.__class__.__name__,
             self.name,
-            self.versions,
+            sorted(self.versions),
         )
 
     def __eq__(self, other):
