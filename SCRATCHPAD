@@ -1,0 +1,22 @@
+# Procedure to find top level (importable name) of a dependency
+
+    Analogous to venv/lib/python3.5/site-packages/Jinja2-<ver>.dist-info/top_level.txt
+
+    * Must be run in the virtualenv of the project being examined
+    * pkg_resources must be available there
+
+    import pkg_resources
+    dist = pkg_resources.get_distribution('Jinja2)
+    dist._provider.get_metadata('top_level.txt')  # 'jinja2\n'
+
+
+# Procedure to find dependencies of an installed package
+
+    Analogous to venv/lib/python3.5/site-packages/Jinja2-<ver>.dist-info/metadata.json
+
+    * Must be run in the virtualenv of the project being examined
+    * pkg_resources must be available there
+
+    import pkg_resources
+    dist = pkg_resources.get_distribution('Jinja2)
+    dist.requires()  # [Requirement.parse('MarkupSafe>=0.23')]
