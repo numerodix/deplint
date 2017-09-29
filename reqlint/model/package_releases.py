@@ -86,6 +86,7 @@ class PackageReleases(object):
 
         # Otherwise apply upper bound filter using requirement version
         else:
+            newer_versions = []
             requirement_version = Version(package_requirement.version)
 
             op = None
