@@ -139,7 +139,7 @@ if __name__ == '__main__':
     )
     parser.add_argument('action', choices=('installed', 'tracked', 'upgrade'),
                         help='Action to take')
-    parser.add_argument('--python', dest='python_path', metavar='<python>',
+    parser.add_argument('-p', '--python', dest='python_path', metavar='<python>',
                         help='Path to python program (typically in a virtualenv)')
     parser.add_argument('-r', '--requirements', dest='requirements_txt',
                         metavar='<file>',
