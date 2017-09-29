@@ -20,3 +20,9 @@
     import pkg_resources
     dist = pkg_resources.get_distribution('Jinja2)
     dist.requires()  # [Requirement.parse('MarkupSafe>=0.23')]
+
+
+# See also
+
+    A tool to infer dependencies from source code:
+        http://furius.ca/snakefood/
