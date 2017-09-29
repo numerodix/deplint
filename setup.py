@@ -8,7 +8,7 @@ def read(fname):
 
 
 setup(
-    name="reqlint",
+    name="deplint",
     version="0.0.1",
     author="Martin Matusiak",
     author_email="numerodix@gmail.com",
@@ -17,7 +17,7 @@ setup(
     keywords="requirements dependencies linter pip",
     # url="http://packages.python.org/an_example_pypi_project",
     scripts=[
-        "bin/reqlinter",
+        "bin/deplint",
     ],
     packages=find_packages(),
     install_requires=read('requirements.txt'),
