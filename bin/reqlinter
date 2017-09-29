@@ -7,9 +7,11 @@ import sys
 
 sys.path.append('.')
 from reqlint.analyzers.can_be_upgraded import CanBeUpgradedAnalyzer
+from reqlint.analyzers.is_transitive_dep import IsTransitiveDepAnalyzer
 from reqlint.analyzers.required_installed import RequiredInstalledAnalyzer
 from reqlint.analyzers.required_not_installed import RequiredNotInstalledAnalyzer
 from reqlint.data_sources.pip import Pip
+from reqlint.data_sources.site_packages.site_packages import SitePackages
 from reqlint.parsers.requirements_txt import RequirementsTxtParser
 from reqlint.ui.writer import UiWriter
 
@@ -45,6 +47,30 @@ class RequirementsLinter(object):
 
         return [advice_list1, advice_list2]
 
+    def analyze_tracked(self):
+        # gather all the data we need to analyze
+        parser = RequirementsTxtParser(fileobj=open(self.args.requirements_txt))
+        requirements_txt = parser.parse()
+
+        pip = Pip(ui=self.ui, pip_path=self.args.pip_path)
+        installed_packages = pip.list_installed_packages()
+
+        installed_names = [pkg.name for pkg in installed_packages.packages]
+        site_packages = SitePackages(
+            python_path=args.python_path,
+            installed_package_names=installed_names,
+        )
+
+        # run the analyzers
+        analyzer = IsTransitiveDepAnalyzer(
+            requirements_txt=requirements_txt,
+            installed_packages=installed_packages,
+            site_packages=site_packages,
+        )
+        advice_list = analyzer.analyze()
+
+        return [advice_list]
+
     def analyze_upgrade(self):
         # gather all the data we need to analyze
         parser = RequirementsTxtParser(fileobj=open(self.args.requirements_txt))
@@ -72,6 +98,9 @@ class RequirementsLinter(object):
 
         if self.args.action == 'installed':
             advice_lists = self.analyze_installed()
+
+        elif self.args.action == 'tracked':
+            advice_lists = self.analyze_tracked()
 
         elif self.args.action == 'upgrade':
             advice_lists = self.analyze_upgrade()
@@ -104,10 +133,12 @@ if __name__ == '__main__':
         ),
         formatter_class=argparse.RawTextHelpFormatter,
     )
-    parser.add_argument('action', choices=('installed', 'upgrade'),
+    parser.add_argument('action', choices=('installed', 'tracked', 'upgrade'),
                         help='Action to take')
     parser.add_argument('--pip', dest='pip_path', metavar='<pip>',
                         help='Path to pip program (typically in a virtualenv)')
+    parser.add_argument('--python', dest='python_path', metavar='<python>',
+                        help='Path to python program (typically in a virtualenv)')
     parser.add_argument('-r', '--requirements', dest='requirements_txt',
                         metavar='<file>',
                         help='Path to requirements.txt file')
