@@ -1,3 +1,8 @@
+'''
+These tests run against the deplint project itself and aim to smoke test the
+cli, nothing more.
+'''
+
 import sys
 
 from deplint.systools.process import invoke
