@@ -8,7 +8,9 @@ class InvokeResult(object):
         self.stderr = stderr
 
 
-def invoke(args, cwd='.', noisy=False):
+def invoke(args, cwd=None, noisy=False):
+    cwd = cwd or '.'
+
     if noisy:
         print("{invoke} Invoking: %s" % ' '.join(args))
 
