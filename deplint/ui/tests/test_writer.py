@@ -5,18 +5,26 @@ def test_writer(capsys):
     # Standard mode
     ui = UiWriter()
 
-    ui.output('it is early')
-    assert capsys.readouterr()[0] == 'it is early\n'
-
     ui.inform('it is late')
-    assert capsys.readouterr()[0] == ''
+    stdout, stderr = capsys.readouterr()
+    assert stdout == ''
+    assert stderr == ''
+
+    ui.output('it is early')
+    stdout, stderr = capsys.readouterr()
+    assert stdout == 'it is early\n'
+    assert stderr == ''
 
 
     # Verbose mode
     ui = UiWriter(verbose=True)
 
-    ui.output('it is early')
-    assert capsys.readouterr()[0] == 'it is early\n'
-
     ui.inform('it is late')
-    assert capsys.readouterr()[0] == 'it is late\n'
+    stdout, stderr = capsys.readouterr()
+    assert stdout == ''
+    assert stderr == 'it is late\n'
+
+    ui.output('it is early')
+    stdout, stderr = capsys.readouterr()
+    assert stdout == 'it is early\n'
+    assert stderr == ''

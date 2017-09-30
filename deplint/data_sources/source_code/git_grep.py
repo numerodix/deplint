@@ -5,6 +5,9 @@ class GitGrep(object):
     def __init__(self, basedir):
         self.basedir = basedir
 
+    def as_display_name(self):
+        return 'git grep'
+
     def package_is_imported(self, package_name):
         args = [
             'git', 'grep', '-E',

@@ -123,6 +123,7 @@ class RequirementsLinter(object):
     def run(self):
         self.ui.inform('Using python: %s' % self.args.python_path)
         self.ui.inform('Using pip: %s' % self.pip.pip_path)
+        self.ui.inform('Using grep: %s' % self.grep.as_display_name())
         self.ui.inform('Using basedir: %s' % self.args.basedir)
         self.ui.inform('Using requirements.txt: %s' % self.args.requirements_txt)
 
@@ -187,6 +188,7 @@ if __name__ == '__main__':
 
     logging.basicConfig(
         level=logging.DEBUG if args.verbose else logging.ERROR,
+        file=sys.stderr,
         format='[%(levelname)s] %(name)s %(message)s',
     )
 

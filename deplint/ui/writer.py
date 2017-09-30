@@ -1,3 +1,6 @@
+import sys
+
+
 class UiWriter(object):
     def __init__(self, verbose=False):
         self.verbose = verbose
@@ -8,7 +11,8 @@ class UiWriter(object):
         '''
 
         if self.verbose:
-            print(text)
+            sys.stderr.write(text + '\n')
+            sys.stderr.flush()
 
     def output(self, text):
         '''
