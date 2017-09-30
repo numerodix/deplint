@@ -30,7 +30,8 @@ def test_run_action_tracked():
         '-v',
     ], noisy=True)
 
-    assert result.exit_code == 0
+    # warning about dev dependencies being installed
+    assert result.exit_code == 1
     assert 'Traceback' not in result.stderr
 
 
