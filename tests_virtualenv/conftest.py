@@ -1,6 +1,5 @@
 import os
 import shutil
-import sys
 
 import pytest
 
@@ -86,10 +85,8 @@ class AppVirtualenv(object):
         )
         assert result.exit_code == 0
 
-        deplint_req = None
         for line in result.stdout.splitlines():
             if line.startswith('deplint'):
-                deplint_req = line
                 break
 
         open(self.app_requirements_txt, 'a').write(line)
