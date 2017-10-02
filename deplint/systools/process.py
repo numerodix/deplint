@@ -24,8 +24,8 @@ def invoke(args, cwd=None, noisy=False):
 
     result = InvokeResult(
         exit_code=proc.returncode,
-        stdout=stdout,
-        stderr=stderr,
+        stdout=stdout.decode('utf-8'),
+        stderr=stderr.decode('utf-8'),
     )
 
     if noisy:

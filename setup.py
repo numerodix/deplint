@@ -21,7 +21,12 @@ setup(
     scripts=[
         "bin/deplint",
     ],
-    packages=find_packages(),
+    packages=find_packages(
+        where='.',
+        exclude=[
+            'tests*',
+        ],
+    ),
 
     # packages imported in the program
     install_requires=[
