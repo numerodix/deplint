@@ -6,3 +6,4 @@
 build/
 dist/
 htmlcov/
+tests_virtualenv/demoapp_internal/ve/

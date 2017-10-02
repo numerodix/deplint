@@ -50,3 +50,15 @@ def test_run_action_upgrade():
 
     assert result.exit_code == 0
     assert 'Traceback' not in result.stderr
+
+
+def test_run_action_unused():
+    result = invoke([
+        'bin/deplint', 'unused',
+        '-r', 'requirements.txt',
+        '--python', sys.executable,
+        '-v',
+    ], noisy=True)
+
+    assert result.exit_code == 0
+    assert 'Traceback' not in result.stderr
