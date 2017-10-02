@@ -3,6 +3,7 @@ Runs deplint against another project's venv from the outside.
 '''
 
 from deplint.systools.process import invoke
+import deplint
 
 
 def test_venv_external_app_works(appvenv_ext):
@@ -68,8 +69,8 @@ def test_venv_external_tracked(appvenv_ext):
     assert result.exit_code == 1
     assert result.stdout.strip() == (
         "[IsTransitiveDep] warn: "
-        "Installed non-transitive dependency 'deplint-0.0.1' is not required"
-    )
+        "Installed non-transitive dependency 'deplint-%s' is not required"
+    ) % (deplint.__version__,)
     assert result.stderr == ''
 
 
@@ -105,7 +106,7 @@ def test_venv_external_unused(appvenv_ext):
     assert result.exit_code == 0
     assert result.stdout.strip() == (
         "[IsUnused] info: "
-        "Required dependency 'deplint==0.0.1' "
+        "Required dependency 'deplint==%s' "
         "is never imported (deplint)"
-    )
+    ) % (deplint.__version__,)
     assert result.stderr == ''
