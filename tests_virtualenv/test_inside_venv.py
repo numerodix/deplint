@@ -2,6 +2,8 @@
 Runs deplint inside another project's venv.
 '''
 
+import os
+
 import deplint
 from deplint.systools.process import invoke
 
@@ -22,10 +24,9 @@ def test_venv_internal_app_works(appvenv_int):
 def test_venv_internal_installed(appvenv_int):
     result = invoke(
         args=[
-            'bin/deplint', 'installed',
-            '-r', appvenv_int.app_requirements_txt,
-            '--python', appvenv_int.app_venv_python,
+            appvenv_int.app_venv_deplint, 'installed',
         ],
+        cwd=appvenv_int.app_rootdir,
         noisy=True
     )
 
@@ -49,10 +50,9 @@ def test_venv_internal_tracked(appvenv_int):
     # Clean bill of health
     result = invoke(
         args=[
-            'bin/deplint', 'tracked',
-            '-r', appvenv_int.app_requirements_txt,
-            '--python', appvenv_int.app_venv_python,
+            appvenv_int.app_venv_deplint, 'tracked',
         ],
+        cwd=appvenv_int.app_rootdir,
         noisy=True
     )
 
@@ -66,10 +66,9 @@ def test_venv_internal_tracked(appvenv_int):
     # Report unnecessary installed package
     result = invoke(
         args=[
-            'bin/deplint', 'tracked',
-            '-r', appvenv_int.app_requirements_txt,
-            '--python', appvenv_int.app_venv_python,
+            appvenv_int.app_venv_deplint, 'tracked',
         ],
+        cwd=appvenv_int.app_rootdir,
         noisy=True
     )
 
@@ -85,10 +84,9 @@ def test_venv_internal_unused(appvenv_int):
     # Report requirement that is never used
     result = invoke(
         args=[
-            'bin/deplint', 'unused',
-            '-r', appvenv_int.app_requirements_txt,
-            '--python', appvenv_int.app_venv_python,
+            appvenv_int.app_venv_deplint, 'unused',
         ],
+        cwd=appvenv_int.app_rootdir,
         noisy=True
     )
 

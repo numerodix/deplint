@@ -198,12 +198,15 @@ if __name__ == '__main__':
         stream=sys.stderr,
     )
 
+    if not args.python_path:
+        #args.python_path = 'python'
+        args.python_path = sys.executable
+
+    if not args.requirements_txt:
+        args.requirements_txt = os.path.abspath('requirements.txt')
+
     if not args.basedir:
         args.basedir = os.path.dirname(args.requirements_txt)
-
-    if not all((args.python_path, args.requirements_txt)):
-        parser.print_help()
-        sys.exit(2)
 
     linter = RequirementsLinter(args)
     exit_code = linter.run()

@@ -12,7 +12,7 @@ def invoke(args, cwd=None, noisy=False):
     cwd = cwd or '.'
 
     if noisy:
-        print("{invoke} Invoking: %s" % ' '.join(args))
+        print("{invoke} [cwd: %s] Invoking: %s" % (cwd, ' '.join(args)))
 
     proc = subprocess.Popen(
         args,

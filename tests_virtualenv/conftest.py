@@ -33,15 +33,19 @@ class AppVirtualenv(object):
         # /tests_virtualenv/demoapp/ve/
         self.app_venvdir = os.path.join(self.app_rootdir, self.app_venv_dirname)
 
-        # /tests_virtualenv/demoapp/ve/python/
+        # /tests_virtualenv/demoapp/ve/bin/python
         self.app_venv_python = os.path.join(self.app_venvdir, 'bin', 'python')
-        # /tests_virtualenv/demoapp/ve/pip/
+        # /tests_virtualenv/demoapp/ve/bin/pip
         self.app_venv_pip = os.path.join(self.app_venvdir, 'bin', 'pip')
+        # /tests_virtualenv/demoapp/ve/bin/deplint
+        self.app_venv_deplint = os.path.join(self.app_venvdir, 'bin', 'deplint')
 
         # Snapshot the content in case we overwrite it later
         self.app_requirements_txt_orig_content = open(self.app_requirements_txt).read()
 
     def initialize(self):
+        self.destroy()  # clean up any existing venv in this location
+
         result = invoke(
             args=['virtualenv', self.app_venv_dirname],
             cwd=self.app_rootdir,
