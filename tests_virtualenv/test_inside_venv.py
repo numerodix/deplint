@@ -4,7 +4,6 @@ Runs deplint inside another project's venv.
 
 import deplint
 from deplint.systools.process import invoke
-from tests_virtualenv.common import appvenv_int
 
 
 def test_venv_internal_app_works(appvenv_int):

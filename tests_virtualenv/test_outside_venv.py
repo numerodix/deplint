@@ -3,7 +3,6 @@ Runs deplint against another project's venv from the outside.
 '''
 
 from deplint.systools.process import invoke
-from tests_virtualenv.common import appvenv_ext
 
 
 def test_venv_external_app_works(appvenv_ext):
