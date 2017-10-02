@@ -1,5 +1,5 @@
 '''
-Runs deplint against another project's venv.
+Runs deplint against another project's venv from the outside.
 '''
 
 from deplint.systools.process import invoke

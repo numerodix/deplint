@@ -2,6 +2,8 @@ import os
 
 from setuptools import find_packages, setup
 
+import deplint
+
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
@@ -9,7 +11,7 @@ def read(fname):
 
 setup(
     name="deplint",
-    version="0.0.1",
+    version=deplint.__version__,
     author="Martin Matusiak",
     author_email="numerodix@gmail.com",
     description=("A linter for dependencies"),

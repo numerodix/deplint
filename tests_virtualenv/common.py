@@ -70,6 +70,14 @@ class AppVirtualenv(object):
         )
         assert result.exit_code == 0
 
+    def install_pypi_package(self, pkg):
+        result = invoke(
+            args=[self.app_venv_pip, 'install', pkg],
+            cwd=self.app_rootdir,
+            noisy=True,
+        )
+        assert result.exit_code == 0
+
     def inject_installed_deplint_into_reqs(self):
         result = invoke(
             args=[self.app_venv_pip, 'freeze'],
