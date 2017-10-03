@@ -2,8 +2,8 @@
 Runs deplint against another project's venv from the outside.
 '''
 
-from deplint.systools.process import invoke
 import deplint
+from deplint.systools.process import invoke
 
 
 def test_venv_external_app_works(appvenv_ext):
