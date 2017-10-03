@@ -1,12 +1,10 @@
-from deplint.data_sources.site_packages.site_packages import SitePackages
 from deplint.analyzers.is_unused import IsUnusedAnalyzer
+from deplint.data_sources.site_packages.site_packages import SitePackages
 from deplint.data_sources.source_code.git_grep import GitGrep
 from deplint.model.advice import Advice
 from deplint.model.advice_list import AdviceList
-from deplint.model.available_packages import AvailablePackages
 from deplint.model.installed_packages import InstalledPackages
 from deplint.model.package_installed import InstalledPackage
-from deplint.model.package_releases import PackageReleases
 from deplint.model.package_requirement import PackageRequirement
 from deplint.model.requirements_txt import RequirementsTxt
 

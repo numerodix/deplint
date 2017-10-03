@@ -2,8 +2,6 @@
 Runs deplint inside another project's venv.
 '''
 
-import os
-
 import deplint
 from deplint.systools.process import invoke
 
@@ -18,6 +16,7 @@ def test_venv_internal_app_works(appvenv_int):
     )
 
     assert result.exit_code == 0
+    assert 'Hello' in result.stdout
     assert 'Traceback' not in result.stderr
 
 

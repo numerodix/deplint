@@ -35,7 +35,7 @@ def dummy_project(pkg, variant, git_init=True):
         code = 'from hammer.rabbit import %s' % pkg
 
     fd, file = tempfile.mkstemp(dir=direc, suffix='.py')
-    os.write(fd, '%s\n' % code)
+    os.write(fd, b'%s\n' % code.encode('utf-8'))
     os.close(fd)
 
     # create a git repo there and add the file - otherwise git grep won't work
@@ -93,7 +93,7 @@ def test_git_grep_imports_nested():
 def test_git_grep_not_a_repo():
     git_grep = GitGrep(basedir='/')
 
-    with dummy_project(pkg='ply', variant='from-y.z-import-x', git_init=False) as direc:
+    with dummy_project(pkg='ply', variant='from-y.z-import-x', git_init=False):
         # can't run in a dir that isn't a git repo
         with pytest.raises(RuntimeError):
             git_grep.package_is_imported('ply')

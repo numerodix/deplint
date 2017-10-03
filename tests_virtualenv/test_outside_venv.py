@@ -16,6 +16,7 @@ def test_venv_external_app_works(appvenv_ext):
     )
 
     assert result.exit_code == 0
+    assert 'Hello' in result.stdout
     assert 'Traceback' not in result.stderr
 
 
