@@ -15,6 +15,9 @@ class RequirementsTxtParser(object):
     # comment at the beginning of line after whitespace
     rx_comment = re.compile('(?:^|\s+)#.*$')
 
+    # cmd line flag to pip
+    rx_flag = re.compile('^[-].*$')
+
     # https://www.python.org/dev/peps/pep-0508/
     pattern_name = '[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9._-]*[A-Za-z0-9]'
 
@@ -44,11 +47,15 @@ class RequirementsTxtParser(object):
     def strip_comment(self, line):
         return self.rx_comment.sub('', line)
 
+    def strip_flag(self, line):
+        return self.rx_flag.sub('', line)
+
     def parse(self):
         pkgs = []
 
         for line in self.fileobj:
             line = self.strip_comment(line)
+            line = self.strip_flag(line)
             line = line.strip()
 
             # If the line was all comment or whitespace then skip it

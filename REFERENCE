@@ -3,3 +3,9 @@ https://www.python.org/dev/peps/pep-0440/
 
 Dependency markers:
 https://www.python.org/dev/peps/pep-0508/
+
+
+
+Checking security advisories:
+    safety project can help
+    safety.safety.check([six, tornado], key=None, db_mirror=None, cached=None, ignore_ids=[])

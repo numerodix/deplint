@@ -16,6 +16,8 @@ mock!=5.1.1
 ply~=3.10
 jsonpath===2.0.x
 simplejson
+-i
+--index-url=http://something.io
 '''
 
 REQS_EXAMPLE_GARBAGE = '''
