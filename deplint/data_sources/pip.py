@@ -68,13 +68,3 @@ class Pip(object):
             pkg_rels = self.search_for_package(package_name=package_name)
             available.append(pkg_rels)
         return AvailablePackages(packages=available)
-
-
-if __name__ == '__main__':
-    import logging
-    logging.basicConfig()
-    pip = Pip('pip')
-    pkgs = pip.list_installed_packages()
-    print(pkgs)
-    rels = pip.search_for_packages(('six', 'simplejson'))
-    print(rels)
