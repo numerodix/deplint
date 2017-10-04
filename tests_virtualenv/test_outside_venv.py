@@ -111,3 +111,19 @@ def test_venv_external_unused(appvenv_ext):
         "is never imported (deplint)"
     ) % (deplint.__version__,)
     assert result.stderr == ''
+
+
+def test_venv_external_vuln(appvenv_ext):
+    # Clean bill of health
+    result = invoke(
+        args=[
+            'bin/deplint', 'vuln',
+            '-r', appvenv_ext.app_requirements_txt,
+            '--python', appvenv_ext.app_venv_python,
+        ],
+        noisy=True
+    )
+
+    assert result.exit_code == 0
+    assert result.stdout == ''
+    assert result.stderr == ''

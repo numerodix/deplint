@@ -33,6 +33,7 @@ setup(
     # packages imported in the program
     install_requires=[
         'packaging',
+        'safety',
         'six',
     ],
     # packages imported in the tests (not used, using tox instead)

@@ -10,6 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from deplint.analyzers.can_be_upgraded import CanBeUpgradedAnalyzer
 from deplint.analyzers.is_transitive_dep import IsTransitiveDepAnalyzer
 from deplint.analyzers.is_unused import IsUnusedAnalyzer
+from deplint.analyzers.is_vulnerable import IsVulnerableAnalyzer
 from deplint.analyzers.required_installed import RequiredInstalledAnalyzer
 from deplint.analyzers.required_not_installed import RequiredNotInstalledAnalyzer
 from deplint.data_sources.pip import Pip
@@ -120,6 +121,18 @@ class RequirementsLinter(object):
 
         return [advice_list]
 
+    def analyze_vulnerabilities(self):
+        # gather all the data we need to analyze
+        installed_packages = self.pip.list_installed_packages()
+
+        # run the analyzers
+        analyzer = IsVulnerableAnalyzer(
+            installed_packages=installed_packages,
+        )
+        advice_list = analyzer.analyze()
+
+        return [advice_list]
+
     def run(self):
         self.ui.inform('Using python: %s' % self.args.python_path)
         self.ui.inform('Using pip: %s' % self.pip.pip_path)
@@ -127,6 +140,7 @@ class RequirementsLinter(object):
         self.ui.inform('Using basedir: %s' % self.args.basedir)
         self.ui.inform('Using requirements.txt: %s' % self.args.requirements_txt)
 
+        advice_lists = []
         if self.args.action == 'installed':
             advice_lists = self.analyze_installed()
 
@@ -138,6 +152,9 @@ class RequirementsLinter(object):
 
         elif self.args.action == 'unused':
             advice_lists = self.analyze_unused()
+
+        elif self.args.action == 'vuln':
+            advice_lists = self.analyze_vulnerabilities()
 
         advice_all = itertools.chain(
             *(ad_list.advice_list for ad_list in advice_lists)
@@ -168,18 +185,22 @@ if __name__ == '__main__':
             'as the other checks depend on metadata from installed dependencies\n'
             'to work correctly.\n'
             '\n'
-            'Can any of the requirements be upgraded?\n'
-            '  deplint upgrade -r requirements.txt --python /path/to/venv/bin/python\n'
-            '\n'
             'Are any of the requirements transitive dependencies and can be dropped?\n'
             '  deplint tracked -r requirements.txt --python /path/to/venv/bin/python\n'
             '\n'
             'Are any of the requirements not used in the code?\n'
-            '  deplint unused -r requirements.txt --python /path/to/venv/bin/python'
+            '  deplint unused -r requirements.txt --python /path/to/venv/bin/python\n'
+            '\n'
+            'Can any of the requirements be upgraded?\n'
+            '  deplint upgrade -r requirements.txt --python /path/to/venv/bin/python'
+            '\n'
+            'Do any of the requirements have known security vulnerabilities?\n'
+            '  deplint vuln -r requirements.txt --python /path/to/venv/bin/python'
         ),
         formatter_class=argparse.RawTextHelpFormatter,
     )
-    parser.add_argument('action', choices=('installed', 'tracked', 'upgrade', 'unused'),
+    parser.add_argument('action',
+                        choices=('installed', 'tracked', 'upgrade', 'unused', 'vuln'),
                         help='Action to take')
     parser.add_argument('-b', '--basedir', dest='basedir', metavar='<basedir>',
                         help='The base directory of the project')

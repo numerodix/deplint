@@ -62,3 +62,15 @@ def test_run_action_unused():
 
     assert result.exit_code == 0
     assert 'Traceback' not in result.stderr
+
+
+def test_run_action_vuln():
+    result = invoke([
+        'bin/deplint', 'vuln',
+        '-r', 'requirements.txt',
+        '--python', sys.executable,
+        '-v',
+    ], noisy=True)
+
+    assert result.exit_code == 0
+    assert 'Traceback' not in result.stderr

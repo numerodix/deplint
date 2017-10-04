@@ -96,3 +96,18 @@ def test_venv_internal_unused(appvenv_int):
         "is never imported (deplint)"
     ) % (deplint.__version__,)
     assert result.stderr == ''
+
+
+def test_venv_internal_vuln(appvenv_int):
+    # Report requirement that is never used
+    result = invoke(
+        args=[
+            appvenv_int.app_venv_deplint, 'vuln',
+        ],
+        cwd=appvenv_int.app_rootdir,
+        noisy=True
+    )
+
+    assert result.exit_code == 0
+    assert result.stdout == ''
+    assert result.stderr == ''

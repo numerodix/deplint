@@ -1,3 +1,4 @@
 # Dependencies needed to run the program
 packaging==16.8
+safety==1.5.1
 six==1.11.0
