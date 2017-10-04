@@ -192,7 +192,7 @@ if __name__ == '__main__':
             '  deplint unused -r requirements.txt --python /path/to/venv/bin/python\n'
             '\n'
             'Can any of the requirements be upgraded?\n'
-            '  deplint upgrade -r requirements.txt --python /path/to/venv/bin/python'
+            '  deplint upgrade -r requirements.txt --python /path/to/venv/bin/python\n'
             '\n'
             'Do any of the requirements have known security vulnerabilities?\n'
             '  deplint vuln -r requirements.txt --python /path/to/venv/bin/python'
