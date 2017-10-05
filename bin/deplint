@@ -121,7 +121,7 @@ class RequirementsLinter(object):
 
         return [advice_list]
 
-    def analyze_vulnerabilities(self):
+    def analyze_vulnerable(self):
         # gather all the data we need to analyze
         installed_packages = self.pip.list_installed_packages()
 
@@ -153,8 +153,8 @@ class RequirementsLinter(object):
         elif self.args.action == 'unused':
             advice_lists = self.analyze_unused()
 
-        elif self.args.action == 'vuln':
-            advice_lists = self.analyze_vulnerabilities()
+        elif self.args.action == 'vulnerable':
+            advice_lists = self.analyze_vulnerable()
 
         advice_all = itertools.chain(
             *(ad_list.advice_list for ad_list in advice_lists)
@@ -179,28 +179,37 @@ if __name__ == '__main__':
             '\n'
             '\n'
             'Are all requirements installed to the correct version?\n'
-            '  deplint installed -r requirements.txt --python /path/to/venv/bin/python\n'
+            '$ deplint installed\n'
             '\n'
             'You should generally fix any warnings/errors from the installed check first,\n'
             'as the other checks depend on metadata from installed dependencies\n'
             'to work correctly.\n'
             '\n'
             'Are any of the requirements transitive dependencies and can be dropped?\n'
-            '  deplint tracked -r requirements.txt --python /path/to/venv/bin/python\n'
+            '$ deplint tracked\n'
             '\n'
             'Are any of the requirements not used in the code?\n'
-            '  deplint unused -r requirements.txt --python /path/to/venv/bin/python\n'
+            '$ deplint unused\n'
             '\n'
             'Can any of the requirements be upgraded?\n'
-            '  deplint upgrade -r requirements.txt --python /path/to/venv/bin/python\n'
+            '$ deplint upgrade\n'
             '\n'
             'Do any of the requirements have known security vulnerabilities?\n'
-            '  deplint vuln -r requirements.txt --python /path/to/venv/bin/python'
+            '$ deplint vulnerable\n'
+            '\n'
+            '\n'
+            'By default deplint assumes you are running against the current\n'
+            'virtualenv. If you want to run against another virtualenv (eg. \n'
+            'you have deplint installed system wide) you need to provide both \n'
+            '-r|--requirements and -p|--python flags, like so:\n'
+            '$ deplint installed \\\n'
+            '    -r ~/src/project/requirements.txt \\\n'
+            '    -p ~/.virtualenvs/project/bin/python'
         ),
         formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument('action',
-                        choices=('installed', 'tracked', 'upgrade', 'unused', 'vuln'),
+                        choices=('installed', 'tracked', 'upgrade', 'unused', 'vulnerable'),
                         help='Action to take')
     parser.add_argument('-b', '--basedir', dest='basedir', metavar='<basedir>',
                         help='The base directory of the project')
@@ -220,7 +229,6 @@ if __name__ == '__main__':
     )
 
     if not args.python_path:
-        #args.python_path = 'python'
         args.python_path = sys.executable
 
     if not args.requirements_txt:

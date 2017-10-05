@@ -64,9 +64,9 @@ def test_run_action_unused():
     assert 'Traceback' not in result.stderr
 
 
-def test_run_action_vuln():
+def test_run_action_vulnerable():
     result = invoke([
-        'bin/deplint', 'vuln',
+        'bin/deplint', 'vulnerable',
         '-r', 'requirements.txt',
         '--python', sys.executable,
         '-v',

@@ -98,11 +98,11 @@ def test_venv_internal_unused(appvenv_int):
     assert result.stderr == ''
 
 
-def test_venv_internal_vuln(appvenv_int):
+def test_venv_internal_vulnerable(appvenv_int):
     # Report requirement that is never used
     result = invoke(
         args=[
-            appvenv_int.app_venv_deplint, 'vuln',
+            appvenv_int.app_venv_deplint, 'vulnerable',
         ],
         cwd=appvenv_int.app_rootdir,
         noisy=True

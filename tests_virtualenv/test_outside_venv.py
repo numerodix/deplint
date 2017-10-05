@@ -113,11 +113,11 @@ def test_venv_external_unused(appvenv_ext):
     assert result.stderr == ''
 
 
-def test_venv_external_vuln(appvenv_ext):
+def test_venv_external_vulnerable(appvenv_ext):
     # Clean bill of health
     result = invoke(
         args=[
-            'bin/deplint', 'vuln',
+            'bin/deplint', 'vulnerable',
             '-r', appvenv_ext.app_requirements_txt,
             '--python', appvenv_ext.app_venv_python,
         ],
