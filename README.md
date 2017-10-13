@@ -1,7 +1,7 @@
 deplint - Dependency linter
 ===========================
 
-Managing dependencies in Python medium-large projects tends to be tedious and
+Managing dependencies in Python medium/large projects tends to be tedious and
 imperfect. Projects tend to adopt one of two conventions:
 
 * List only top level dependencies in `requirements.txt` (either locked to a
