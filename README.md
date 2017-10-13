@@ -19,18 +19,18 @@ imperfect. Projects tend to adopt one of two conventions:
 
 deplint collects information from a number of different sources:
 
-* Your required dependencies (ie. the contents of your `requirements.txt`.
+* Your required dependencies (ie. the contents of your `requirements.txt`).
 
 * Your installed dependencies (ie. what's in `pip freeze`).
 
-* Package metadata from your virtualenv site-packages.
+* Package metadata from your virtualenv `site-packages`.
 
 * Packages available in the package index (via `pip search`).
 
 * Your source code (import statements).
 
 Based on this it can advise you on your dependencies in a way that you could
-do manually, but it automates it away.
+do yourself manually, but it automates away the mechanical work.
 
 
 
@@ -95,7 +95,8 @@ $ deplint tracked
 ```
 
 deplint discovers the dependency relationship between packages based on
-metadata in your virtualenv's site-packages. From this it will tell you about:
+metadata in your virtualenv's `site-packages`. From this it will tell you
+about:
 
 * Packages that are installed but not required (and also not a transitive
   dependency of a required package). This could mean you installed something
@@ -117,12 +118,12 @@ $ deplint unused
 [IsUnused] info: Required dependency 'Unidecode==0.04.21' is never imported (unidecode)
 ```
 
-deplint will scan your source code for import statements. If your projects
+deplint will scan your source code for import statements. If your project
 requires a specific package, but that package is never imported by your code
-then you will see this here. This could mean the package is a command like tool
+then you will see this here. This could mean the package is a command line tool
 like `flake8` or `tox` that is often installed but not imported in code. If
 not, it could mean that you do not need this requirement anymore (perhaps it
-was used in earlier versions of the code).
+was used in earlier versions of the code?).
 
 
 Examining upgradeable dependencies
