@@ -15,7 +15,7 @@ setup(
     author="Martin Matusiak",
     author_email="numerodix@gmail.com",
     description=("A linter for dependencies"),
-    long_description=read('README.rst'),
+    long_description=read('README.md'),
     license="MIT",
     keywords="requirements dependencies linter pip",
     # url="http://packages.python.org/an_example_pypi_project",
