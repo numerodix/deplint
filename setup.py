@@ -16,9 +16,9 @@ setup(
     author_email="numerodix@gmail.com",
     description=("A linter for dependencies"),
     long_description=read('README.md'),
-    license="MIT",
+    license="Apache",
     keywords="requirements dependencies linter pip",
-    # url="http://packages.python.org/an_example_pypi_project",
+    url="https://github.com/numerodix/deplint",
 
     scripts=[
         "bin/deplint",
@@ -42,7 +42,9 @@ setup(
 
     classifiers=[
         "Development Status :: 3 - Alpha",
-        # "Topic :: Utilities",
-        # "License :: OSI Approved :: MIt License",  # XXX
+        "License :: OSI Approved :: Apache Software License",
+        "Topic :: Utilities",
+        "Topic :: Software Development :: Quality Assurance",
+        "Intended Audience :: Developers",
     ],
 )
