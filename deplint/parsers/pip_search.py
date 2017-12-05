@@ -53,9 +53,11 @@ class PipSearchParser(object):
 
     def parse(self, package_name):
         versions = []
+        cur_pkgname = None
 
         for line in self.content.splitlines():
             # the line is all whitespace, skip it
+
             if not line.strip():
                 continue
 
@@ -68,10 +70,11 @@ class PipSearchParser(object):
                 _logger.warn('Unable to parse pip search line: %s', line)
                 continue
 
-            cur_pkgname = match_starting and match_starting.groupdict()['name']
+            if match_starting:
+                cur_pkgname = match_starting.groupdict()['name']
 
             # we've entered a new package block
-            if cur_pkgname and not cur_pkgname == package_name:
+            if cur_pkgname != package_name:
                 continue
 
             if match_starting:
