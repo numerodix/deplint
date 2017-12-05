@@ -114,6 +114,8 @@ six (1.11.0)                       - Python 2 and 3 compatibility utilities
 sixelplot (0.0.3)                  - thin-wrapper for pysixel and matplotlib.
 sixelterm (0.0.10)                 - Display JPEG/PNG image with cat command, on some terminals
                                      support SIXEL (RLogin/mlterm/tanasinn). Inspired by GateOne.
+  INSTALLED: 1.28.0
+  LATEST:    1.29.0
 sixer (1.6)                        - Add Python 3 support to Python 2 applications using the six
                                      module.
 sixfeetup.customfolderalert (1.3)  - Is there evil in your site? This product will let you know.
